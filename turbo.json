@@ -1,5 +1,9 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": [
+    "JWT_SECRET",
+    "PORT"
+  ],
   "ui": "tui",
   "tasks": {
     "build": {
@@ -8,7 +12,7 @@
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
-        ".env*"
+        ".env"
       ],
       "outputs": [
         "dist/**",
@@ -30,7 +34,7 @@
       "cache": false,
       "persistent": true,
       "inputs": [
-        ".env*"
+        ".env"
       ]
     }
   }

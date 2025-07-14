@@ -1,25 +1,25 @@
+import dotenv from "dotenv"
+dotenv.config({ path: "../../.env" });
 import { Server } from "socket.io";
-import { Server as HttpServer } from "http";
 
-let io: Server | null = null;
+const io = new Server({
+    cors: {
+        origin: "*",
+        methods: ['GET', 'POST', 'PUT', 'DELETE']
+    }
+});
 
-export function InitializeSocket(httpServer: HttpServer) {
-    io = new Server(httpServer, {
-        cors: {
-            origin: "*",
-            methods: ['GET', 'POST', 'PUT', 'DELETE']
-        }
+io.on("connection", (socket) => {
+    console.log(`Socket connected: ${socket.id}`);
+
+    socket.on("message", (event) => {
+        console.log(event);
     });
 
-    io.on("connection", (socket) => {
-        console.log(`Socket connected : ${socket.id}`);
-
-        socket.on("message", (event) => {
-            console.log(event);
-        });
-
-        socket.on("dissconnect", () => {
-            console.log(`Socket disconnected ${socket.id}`);
-        });
+    socket.on("disconnect", () => {
+        socket.disconnect(true);
+        console.log("Socket disconnected");
     });
-}
+});
+
+io.listen(+process.env.PORT!);

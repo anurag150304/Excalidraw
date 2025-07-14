@@ -1,3 +1,9 @@
+# vscode
+.vscode/
+
+# npm
+.npmrc
+
 # dependencies
 node_modules
 .pnp
@@ -7,6 +13,10 @@ node_modules
 coverage
 
 # next.js
+# pnpm
+pnpm-debug.log*
+*.tsbuildinfo
+
 .next/
 out/
 build
@@ -15,6 +25,11 @@ build
 # misc
 .DS_Store
 *.pem
+
+# turbo
+.turbo
+turbo.log*
+
 
 # debug
 npm-debug.log*
@@ -29,7 +44,11 @@ yarn-error.log*
 .env.production.local
 
 # turbo
+
 .turbo
 
+packages/ui/dist/
+
+# IDE
 # ui
 dist/
