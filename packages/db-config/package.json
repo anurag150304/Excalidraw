@@ -5,8 +5,8 @@
   "main": "db.config.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsc -b",
-    "build": "tsc"
+    "dev": "tsc",
+    "build": "tsc -b"
   },
   "keywords": [],
   "author": "",

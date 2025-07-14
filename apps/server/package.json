@@ -5,8 +5,8 @@
   "main": "./src/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsc -b && node ./dist/server.js",
-    "build": "tsc",
+    "dev": "tsc && node ./dist/server.js",
+    "build": "tsc -b",
     "start": "node ./dist/server.js"
   },
   "devDependencies": {
