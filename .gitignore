@@ -1,5 +1,14 @@
-# vscode
+# IDE/editor
 .vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
 
 # npm
 .npmrc
@@ -12,43 +21,32 @@ node_modules
 # testing
 coverage
 
-# next.js
-# pnpm
-pnpm-debug.log*
-*.tsbuildinfo
-
+# next.js, build artifacts
 .next/
 out/
 build
 .swc/
-
-# misc
-.DS_Store
-*.pem
+*.tsbuildinfo
+**/dist/
+**/build/
+**/.next/
 
 # turbo
 .turbo
 turbo.log*
 
-
-# debug
+# debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# local env files
+# env files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# turbo
-
-.turbo
-
-packages/ui/dist/
-
-# IDE
-# ui
-dist/
+# keys, certs
+*.pem
