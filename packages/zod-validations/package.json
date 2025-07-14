@@ -1,20 +1,22 @@
 {
-  "name": "@repo/types",
+  "name": "@repo/zod-validations",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc",
+    "build": "tsc -b"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
   "devDependencies": {
-    "@repo/zod-validations": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "zod": "^4.0.5"
   },
   "exports": {
-    "./*": "./*.ts"
+    "./*": "./dist/*.js"
   }
 }

@@ -1,10 +1,11 @@
 {
-  "name": "@repo/db-config",
+  "name": "@repo/utils",
   "version": "1.0.0",
   "description": "",
-  "main": "db.config.ts",
+  "main": "index.js",
   "type": "module",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsc",
     "build": "tsc -b"
   },
@@ -12,14 +13,14 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.13.1",
-  "exports": {
-    "./dbClient": "./dist/db.config.js"
-  },
   "devDependencies": {
-    "prisma": "^6.11.1",
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@types/jsonwebtoken": "^9.0.10"
   },
   "dependencies": {
-    "@prisma/client": "6.11.1"
+    "jsonwebtoken": "^9.0.2"
+  },
+  "exports": {
+    "./*": "./dist/*.js"
   }
 }
