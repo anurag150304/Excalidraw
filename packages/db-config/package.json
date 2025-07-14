@@ -1,0 +1,21 @@
+{
+  "name": "@repo/db-config",
+  "version": "1.0.0",
+  "description": "",
+  "main": "db.config.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc -b",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "exports": {
+    "./dbClient": "./db.config.js"
+  },
+  "devDependencies": {
+    "prisma": "^6.11.1"
+  }
+}
