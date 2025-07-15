@@ -22,6 +22,7 @@ const io = new Server({
 
 io.use(async (socket, next) => {
     const token = socket.handshake.headers.authorization?.split(' ')[1];
+    console.log(token);
     if (!token) return next(new Error("No token provided!"));
 
     const blackListed = await redisClient.get(token);

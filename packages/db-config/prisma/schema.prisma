@@ -13,4 +13,24 @@ model Users {
   lastname  String?
   email     String  @unique
   password  String
+  chats     Chats[]
+  rooms     Rooms[]
+}
+
+model Rooms {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  adminId   String
+  admin     Users    @relation(fields: [adminId], references: [id])
+  chats     Chats[]
+  createdAt DateTime @default(now())
+}
+
+model Chats {
+  id     Int    @id @default(autoincrement())
+  text   String
+  userId String
+  roomId Int
+  user   Users  @relation(fields: [userId], references: [id])
+  room   Rooms  @relation(fields: [roomId], references: [id])
 }
