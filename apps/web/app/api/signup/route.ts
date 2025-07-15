@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { userSchema } from "@repo/zod-validations/user.validation"
 import dbClient from "@repo/db-config/dbClient"
-import { errHandler } from "@repo/types/errorTypes"
+import { errHandler } from "@repo/utils/errHandler"
 import bcrypt from "bcrypt";
 
 export async function POST(req: NextRequest) {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const userExist = await dbClient.users.findFirst({ where: { email: data.email } });
-        if (userExist) throw new errHandler("Email already taken!", 411);
+        if (userExist) throw new errHandler("Email already taken!", 409);
 
         await dbClient.users.create({
             data: {

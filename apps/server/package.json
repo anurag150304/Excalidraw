@@ -10,8 +10,10 @@
     "start": "node ./dist/socket.js"
   },
   "devDependencies": {
-    "@repo/types": "workspace:*",
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@repo/db-config": "workspace:*",
+    "@repo/redis": "workspace:*",
+    "@repo/utils": "workspace:*"
   },
   "keywords": [],
   "author": "",
