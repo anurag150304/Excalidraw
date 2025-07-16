@@ -5,7 +5,8 @@
     "NEXTAUTH_SECRET",
     "REDIS_HOST",
     "REDIS_PORT",
-    "REDIS_PASSWORD"
+    "REDIS_PASSWORD",
+    "NEXTAUTH_URL"
   ],
   "ui": "tui",
   "tasks": {
