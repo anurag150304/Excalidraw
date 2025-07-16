@@ -4,8 +4,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   env: {
-    JWT_SECRET: process.env.JWT_SECRET,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    SOCKET_URL: process.env.SOCKET_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
   typescript: {
     ignoreBuildErrors: true,

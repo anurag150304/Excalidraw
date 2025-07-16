@@ -1,17 +1,7 @@
 "use client";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { ButtonType } from "@repo/types/commonTypes"
 
 export default function Button(props: Partial<ButtonType>) {
-    const router = useRouter();
-    const performTask = () => {
-        if (props.task === "signout") {
-            signOut();
-            return router.push("/");
-        }
-        if (props.task) return router.push(props.task);
-    }
     return (
         <button
             className={`
@@ -25,8 +15,8 @@ export default function Button(props: Partial<ButtonType>) {
                 ${props.radius}
                 ${props.className}
                 cursor-pointer
-                flex justify-center items-center gap-2`}
-            onClick={props.onClick ?? performTask}>
+                flex justify-center items-center`}
+            onClick={props.onClick}>
             {props.text}
             {props.icon}
         </button>

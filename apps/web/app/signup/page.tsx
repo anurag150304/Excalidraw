@@ -2,7 +2,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Button from "../../components/Button";
+import Button from "@repo/ui/Button";
 import { ChangeEvent, useState } from "react";
 import { User } from "@repo/types/zodTypeInfers"
 

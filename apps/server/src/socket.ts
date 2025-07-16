@@ -22,11 +22,12 @@ const io = new Server({
     cors: {
         origin: "*",
         methods: ['GET', 'POST', 'PUT', 'DELETE']
-    }
+    },
+    pingTimeout: 60_000
 });
 
 io.use(async (socket, next) => {
-    const userSocket = (socket as UserSocket);
+    const userSocket: UserSocket = (socket as UserSocket);
     const token = userSocket.handshake.headers.authorization?.split(' ')[1];
     if (!token) return next(new Error("No token provided!"));
 
@@ -49,7 +50,7 @@ io.use(async (socket, next) => {
 });
 
 io.on("connection", (socket) => {
-    const userSocket = (socket as UserSocket);
+    const userSocket: UserSocket = (socket as UserSocket);
     console.log(`Socket connected: ${userSocket.id}`);
 
     userSocket.on("join", (data) => {
@@ -59,8 +60,10 @@ io.on("connection", (socket) => {
             return;
         }
 
-        if (rooms.has(roomId)) rooms.set(roomId, [...rooms.get(roomId)!, userSocket]);
-        else rooms.set(roomId, [userSocket]);
+        const allSockets = rooms.get(roomId) ?? [];
+        if (!allSockets.includes(userSocket)) {
+            rooms.set(roomId, [...allSockets, userSocket]);
+        }
         userSocket.join(roomId);
     });
 
@@ -79,6 +82,27 @@ io.on("connection", (socket) => {
             sender: userSocket.name,
             message
         });
+    });
+
+    userSocket.on("leave", (data) => {
+        const { roomId } = data;
+        if (!roomId) {
+            userSocket.emit("socket_error", { error: "Room Id required!" });
+            return;
+        }
+
+        if (!rooms.has(roomId)) {
+            userSocket.emit("socket_error", { error: "Room not found!" });
+            return;
+        }
+
+        const userRoom = rooms.get(roomId);
+        if (!userRoom) {
+            userSocket.emit("socket_error", { error: "You are not in this room!" });
+            return;
+        }
+        rooms.set(roomId, userRoom.filter(skt => skt != userSocket));
+        userSocket.leave(roomId);
     });
 
     userSocket.on("disconnect", () => {
