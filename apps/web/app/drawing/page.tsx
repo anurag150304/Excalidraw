@@ -1,8 +1,10 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { SessionProvider } from "next-auth/react";
 import { SocketProvider } from "../../context/socket.context";
+import { useEffect, useRef } from "react";
+import { draw } from "../../canvas/draw";
 
 export default function CanvasPage() {
     return (<SessionProvider>
@@ -13,9 +15,14 @@ export default function CanvasPage() {
 }
 
 function Canvas() {
-    const session = useSession();
-    console.log(session.data?.user)
+    // const session = useSession();
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        if (!canvasRef.current) return;
+        draw(canvasRef.current);
+    }, [canvasRef])
     return (
-        <h1>Canvas Page</h1>
+        <canvas ref={canvasRef} className="bg-[#000000e9]" height={603} width={1306} />
     )
 }
