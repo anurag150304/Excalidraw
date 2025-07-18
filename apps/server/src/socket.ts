@@ -13,6 +13,7 @@ import { validateToken } from "@repo/utils/jwt"
 import redisClient from "@repo/redis/redisClient"
 
 interface UserSocket extends Socket {
+    userId: string;
     name: string;
     email: string;
 }
@@ -20,7 +21,7 @@ interface UserSocket extends Socket {
 const rooms = new Map<string, UserSocket[]>();
 const io = new Server({
     cors: {
-        origin: "*",
+        origin: ["http://localhost:3001"],
         methods: ['GET', 'POST', 'PUT', 'DELETE']
     },
     pingTimeout: 60_000
@@ -41,6 +42,7 @@ io.use(async (socket, next) => {
         const user = await dbClient.users.findFirst({ where: { email: decoded?.email } });
         if (!user) throw new Error("Validation failed!");
 
+        userSocket.userId = user.id;
         userSocket.name = `${user.firstname} ${user.lastname ?? ''}`;
         userSocket.email = user.email;
         next();
@@ -53,11 +55,22 @@ io.on("connection", (socket) => {
     const userSocket: UserSocket = (socket as UserSocket);
     console.log(`Socket connected: ${userSocket.id}`);
 
-    userSocket.on("join", (data) => {
+    userSocket.on("join", async (data) => {
         const { roomId } = data;
+
         if (!roomId) {
             userSocket.emit("socket_error", { error: "Room Id required!" });
             return;
+        }
+
+        const room = await dbClient.rooms.findFirst({ where: { roomId } });
+        if (!room) {
+            await dbClient.rooms.create({
+                data: {
+                    roomId,
+                    admin: { connect: { id: userSocket.userId } }
+                }
+            });
         }
 
         const allSockets = rooms.get(roomId) ?? [];
@@ -67,10 +80,11 @@ io.on("connection", (socket) => {
         userSocket.join(roomId);
     });
 
-    userSocket.on("send_message", (data) => {
-        const { roomId, message } = data;
-        if (!roomId || !message) {
-            userSocket.emit("socket_error", { error: "Room Id & Message is required!" });
+    userSocket.on("send_message", async (data) => {
+        const { roomId, slug } = data;
+
+        if (!roomId || !slug) {
+            userSocket.emit("socket_error", { error: "Room Id & Slug is required!" });
             return;
         }
 
@@ -78,9 +92,22 @@ io.on("connection", (socket) => {
             userSocket.emit("socket_error", { error: "Room not found!" });
             return;
         }
+
+        dbClient.canvas.create({
+            data: {
+                slug: JSON.stringify(slug),
+                user: { connect: { id: userSocket.userId } },
+                room: { connect: { roomId } }
+            }
+        })
+            .catch(err => {
+                console.log(err);
+                userSocket.emit("socket_error", { error: err.message });
+                return;
+            });
+
         userSocket.to(roomId).emit("recieve_message", {
-            sender: userSocket.name,
-            message
+            sender: userSocket.name, slug
         });
     });
 

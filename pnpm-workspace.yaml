@@ -4,6 +4,9 @@ packages:
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
+  - '@prisma/client'
+  - '@prisma/engines'
   - '@tailwindcss/oxide'
   - bcrypt
+  - prisma
   - sharp

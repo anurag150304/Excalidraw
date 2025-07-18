@@ -14,3 +14,16 @@ export interface ButtonType {
     task: string;
     onClick?: () => void;
 }
+
+export type DataType = { roomId: string, slug: Shapes };
+
+export interface Coords {
+    initial: { x: number, y: number };
+    final: { x: number, y: number };
+}
+
+export interface Shapes {
+    type: "rect" | "circ";
+    cords: Coords;
+    size: { h: number, w: number };
+}

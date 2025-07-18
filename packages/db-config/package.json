@@ -16,10 +16,10 @@
     "./dbClient": "./dist/db.config.js"
   },
   "devDependencies": {
-    "prisma": "^6.11.1",
     "@repo/typescript-config": "workspace:*"
   },
   "dependencies": {
-    "@prisma/client": "6.11.1"
+    "@prisma/client": "6.11.1",
+    "prisma": "^6.12.0"
   }
 }
