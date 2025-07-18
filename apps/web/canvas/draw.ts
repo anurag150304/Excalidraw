@@ -13,10 +13,6 @@ export function draw(
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    if (shapes.length > 0) {
-        addExistingShapes(canvas, ctx, shapes);
-    }
-
     canvas.addEventListener("mousedown", (e) => {
         isClicked = true;
         coords.initial.x = e.clientX;

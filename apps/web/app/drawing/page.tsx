@@ -5,7 +5,7 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { Suspense, useEffect, useRef } from "react";
 import { addExistingShapes, draw } from "../../canvas/draw";
 import { Shapes } from "@repo/types/commonTypes";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { InitializeSocket, receiveMessage, sendMessage, socket } from "../../lib/socket.config";
 
 export default function CanvasPage() {
@@ -21,12 +21,17 @@ function Canvas() {
     const shapes = useRef<Shapes[]>([]);
     const params = useSearchParams();
     const session = useSession();
+    const router = useRouter();
 
     useEffect(() => {
         if (session.status !== "authenticated" || !canvasRef.current) return;
-        InitializeSocket(session.data.user.accessToken);
+        const roomId = params.get("roomId");
+        if (!roomId) {
+            alert("Room ID is required");
+            return router.push("/");
+        }
 
-        const roomId = params.get("roomId")!;
+        InitializeSocket(session.data.user.accessToken);
         sendMessage("join", { roomId });
 
         fetchAllCanvas(roomId);
@@ -40,7 +45,7 @@ function Canvas() {
             socket?.off("socket_error", handleSocketError);
         }
 
-    }, [session.status, session.data?.user.accessToken, params]);
+    }, [session.status, session.data?.user.accessToken, params, router]);
 
     const handleReceiveMessage = (data: { sender: string; slug: Shapes }) => {
         shapes.current.push(data.slug);
@@ -71,6 +76,8 @@ function Canvas() {
     }
 
     return (
-        <canvas ref={canvasRef} className="bg-[#000000e9]" height={603} width={1306} />
+        <main className="relative h-screen w-screen overflow-hidden">
+            <canvas ref={canvasRef} className="bg-[#000000e9]" height={window.innerHeight} width={window.innerWidth} />
+        </main>
     )
 }
