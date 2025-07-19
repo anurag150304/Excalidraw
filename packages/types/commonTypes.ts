@@ -23,7 +23,15 @@ export interface Coords {
 }
 
 export interface Shapes {
-    type: "rect" | "circ";
+    type: "rect" | "circ" | "line" | "pencil" | "lock";
     cords: Coords;
     size: { h: number, w: number };
+}
+
+export interface ToolsType {
+    lock: boolean;
+    rect: boolean;
+    circ: boolean;
+    line: boolean;
+    pencil: boolean;
 }
