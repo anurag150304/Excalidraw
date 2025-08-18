@@ -2,7 +2,7 @@ import { Coords, DataType, Shapes } from "@repo/types/commonTypes"
 import { dawLine, drawCircle, drawRectangle } from "./shapes";
 
 interface DrawParamTypes {
-    type: "rect" | "circ" | "line" | "pencil" | "lock";
+    type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser";
     canvas: HTMLCanvasElement;
     shapes: Shapes[];
     sendCanvas: (eventName: string, data: Partial<DataType>) => void;
@@ -28,6 +28,8 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
 
     function handleOnMouseUp(e: MouseEvent) {
         isClicked = false;
+        if (type === "eraser") return;
+
         coords.final.x = e.clientX;
         coords.final.y = e.clientY;
 
@@ -58,6 +60,11 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
         size.height = e.clientY - coords.initial.y;
 
         addExistingShapes(canvas, ctx!, shapes);
+
+        if (type === "eraser") {
+            console.log(e.clientX)
+            console.log(canvas.offsetLeft, canvas.offsetTop)
+        }
 
         ctx!.lineWidth = 2;
         ctx!.strokeStyle = 'white';

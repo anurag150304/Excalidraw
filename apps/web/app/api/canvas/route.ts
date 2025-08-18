@@ -9,7 +9,6 @@ export async function GET(req: NextRequest) {
 
         const allCanvas = await dbClient.canvas.findMany({
             where: { roomId },
-            take: 50,
             orderBy: { id: 'asc' },
             select: { slug: true }
         });

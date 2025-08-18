@@ -9,15 +9,17 @@ import { ToolsType, Shapes } from "@repo/types/commonTypes";
 import { HiArrowLongRight } from "react-icons/hi2";
 import { PiPencilSimpleLight } from "react-icons/pi";
 import { PiPencilSimpleFill } from "react-icons/pi";
+import { CiEraser } from "react-icons/ci";
 import { draw } from "../canvas/draw";
 import { sendMessage } from "../lib/socket.config";
+import { FaEraser } from "react-icons/fa";
 
 function TopPanel({ canvas, shapes, roomId }: { canvas: HTMLCanvasElement; shapes: Shapes[]; roomId: string; }) {
-    const [tool, setTool] = useState<ToolsType>({ lock: true, rect: false, circ: false, line: false, pencil: false });
+    const [tool, setTool] = useState<ToolsType>({ lock: true, rect: false, circ: false, line: false, pencil: false, eraser: false });
     const cleanupRef = useRef<() => void>(() => { });
 
-    function executeDrawTool(type: "rect" | "circ" | "line" | "pencil" | "lock") {
-        setTool({ lock: false, rect: false, circ: false, line: false, pencil: false, [type]: true });
+    function executeDrawTool(type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser") {
+        setTool({ lock: false, rect: false, circ: false, line: false, pencil: false, eraser: false, [type]: true });
         cleanupRef.current?.();
         cleanupRef.current = draw({ canvas, shapes, type, sendCanvas: sendMessage, roomId });
     }
@@ -53,6 +55,12 @@ function TopPanel({ canvas, shapes, roomId }: { canvas: HTMLCanvasElement; shape
                 icon={<PiPencilSimpleLight className="text-xl" />}
                 changeIcon={<PiPencilSimpleFill className="text-xl" />}
                 execute={() => executeDrawTool("pencil")}
+            />
+            <CanavasBtn
+                active={tool.eraser}
+                icon={<CiEraser className="text-xl" />}
+                changeIcon={<FaEraser className="text-xl" />}
+                execute={() => executeDrawTool("eraser")}
             />
         </div>
     )

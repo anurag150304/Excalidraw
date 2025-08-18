@@ -34,4 +34,5 @@ export interface ToolsType {
     circ: boolean;
     line: boolean;
     pencil: boolean;
+    eraser: boolean;
 }
