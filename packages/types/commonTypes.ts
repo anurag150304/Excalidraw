@@ -26,6 +26,7 @@ export interface Shapes {
     type: "rect" | "circ" | "line" | "pencil" | "lock";
     cords: Coords;
     size: { h: number, w: number };
+    pixels?: { x: number, y: number }[];
 }
 
 export interface ToolsType {
