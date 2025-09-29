@@ -1,5 +1,5 @@
 import { Coords, DataType, Shapes } from "@repo/types/commonTypes"
-import { dawLine, drawCircle, drawRectangle } from "./shapes";
+import { dawLine, drawCircle, drawRectangle, pencil } from "./shapes";
 
 interface DrawParamTypes {
     type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser";
@@ -22,16 +22,16 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
 
     function handleOnMouseDown(e: MouseEvent) {
         isClicked = true;
-        coords.initial.x = e.clientX;
-        coords.initial.y = e.clientY;
+        coords.initial.x = e.offsetX;
+        coords.initial.y = e.offsetY;
     }
 
     function handleOnMouseUp(e: MouseEvent) {
         isClicked = false;
         if (type === "eraser") return;
 
-        coords.final.x = e.clientX;
-        coords.final.y = e.clientY;
+        coords.final.x = e.offsetX;
+        coords.final.y = e.offsetY;
 
         shapes.push({
             type,
@@ -45,44 +45,49 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
             }
         });
 
-        if (sendCanvas && roomId) {
-            sendCanvas("send_message", {
-                roomId,
-                slug: shapes[shapes.length - 1]
-            });
-        }
+        // if (sendCanvas && roomId) {
+        //     sendCanvas("send_message", {
+        //         roomId,
+        //         slug: shapes[shapes.length - 1]
+        //     });
+        // }
     }
 
     function handleOnMouseMove(e: MouseEvent) {
         if (!isClicked) return;
 
-        size.width = e.clientX - coords.initial.x;
-        size.height = e.clientY - coords.initial.y;
-
-        addExistingShapes(canvas, ctx!, shapes);
-
-        if (type === "eraser") {
-            console.log(e.clientX)
-            console.log(canvas.offsetLeft, canvas.offsetTop)
-        }
+        size.width = e.offsetX - coords.initial.x;
+        size.height = e.offsetY - coords.initial.y;
 
         ctx!.lineWidth = 2;
         ctx!.strokeStyle = 'white';
+        ctx!.fillStyle = "#ffffff";
+
+        if (type === "pencil") {
+            pencil(ctx!, coords.initial.x, coords.initial.y, e.offsetX, e.offsetY);
+            coords.initial.x = e.offsetX;
+            coords.initial.y = e.offsetY;
+            return;
+        }
+
+        addExistingShapes(canvas, ctx!, shapes);
 
         if (type === "rect") {
             drawRectangle(ctx!, coords.initial.x, coords.initial.y, size.width, size.height);
         }
+
         if (type === "circ") {
-            drawCircle(
-                ctx!,
+            drawCircle(ctx!,
                 (e.clientX + coords.initial.x) / 2,
                 (e.clientY + coords.initial.y) / 2,
                 Math.max(Math.abs(size.width), Math.abs(size.height)) / 2
             );
         }
+
         if (type === "line") {
-            dawLine(ctx!, { initial: { x: coords.initial.x, y: coords.initial.y }, final: { x: e.clientX, y: e.clientY } });
+            dawLine(ctx!, { initial: { x: coords.initial.x, y: coords.initial.y }, final: { x: e.offsetX, y: e.offsetY } });
         }
+
     }
 
     canvas.addEventListener("mousedown", handleOnMouseDown);
@@ -115,7 +120,7 @@ export function addExistingShapes(canvas: HTMLCanvasElement, ctx: CanvasRenderin
                 Math.max(Math.abs(shape.size.w), Math.abs(shape.size.h)) / 2);
         }
         if (shape.type === "line") {
-            dawLine(ctx!, {
+            dawLine(ctx, {
                 initial: { x: shape.cords.initial.x, y: shape.cords.initial.y },
                 final: { x: shape.cords.final.x, y: shape.cords.final.y }
             });

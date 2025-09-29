@@ -99,16 +99,13 @@ io.on("connection", (socket) => {
                 user: { connect: { id: userSocket.userId } },
                 room: { connect: { roomId } }
             }
-        })
-            .catch(err => {
-                console.log(err);
-                userSocket.emit("socket_error", { error: err.message });
-                return;
-            });
-
-        userSocket.to(roomId).emit("recieve_message", {
-            sender: userSocket.name, slug
+        }).catch((err: Error) => {
+            console.log(err);
+            userSocket.emit("socket_error", { error: err.message });
+            return;
         });
+
+        userSocket.to(roomId).emit("recieve_message", { sender: userSocket.name, slug });
     });
 
     userSocket.on("leave", (data) => {
@@ -124,7 +121,7 @@ io.on("connection", (socket) => {
         }
 
         const userRoom = rooms.get(roomId);
-        if (!userRoom) {
+        if (!userRoom?.includes(userSocket)) {
             userSocket.emit("socket_error", { error: "You are not in this room!" });
             return;
         }

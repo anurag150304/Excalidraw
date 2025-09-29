@@ -72,7 +72,7 @@ function Canvas() {
     async function fetchAllCanvas(roomId: string) {
         axios.get("/api/canvas", { params: { roomId } })
             .then(res => {
-                if (!res.data.canvas || res.data.canvas.length < 1) return;
+                if (!res.data.canvas || !res.data.canvas.length) return;
 
                 res.data.canvas.map((val: { slug: string }) => {
                     shapes.current.push(JSON.parse(val.slug));
