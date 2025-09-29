@@ -28,9 +28,7 @@ export const sendMessage = (eventName: string, data: Partial<DataType>) => {
     }
 };
 
-export const receiveMessage = (eventName: string, callback: (
-    data: { sender: string, slug: Shapes } & { error: string }
-) => void) => {
+export const receiveMessage = (eventName: string, callback: (data: { sender: string, slug: Shapes } & { error: string }) => void) => {
     if (socket) {
         socket.on(eventName, callback);
     } else {
