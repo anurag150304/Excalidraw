@@ -9,6 +9,8 @@ interface DrawParamTypes {
     roomId: string;
 }
 
+const pixels: { x: number, y: number }[] = [];
+
 export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamTypes) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return () => { };
@@ -24,6 +26,9 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
         isClicked = true;
         coords.initial.x = e.offsetX;
         coords.initial.y = e.offsetY;
+        if (type === "pencil") {
+            pixels.push({ x: coords.initial.x, y: coords.initial.y });
+        }
     }
 
     function handleOnMouseUp(e: MouseEvent) {
@@ -42,15 +47,16 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
             size: {
                 h: coords.final.y - coords.initial.y,
                 w: coords.final.x - coords.initial.x
-            }
+            },
+            ...(type === "pencil" && { pixels })
         });
 
-        // if (sendCanvas && roomId) {
-        //     sendCanvas("send_message", {
-        //         roomId,
-        //         slug: shapes[shapes.length - 1]
-        //     });
-        // }
+        if (sendCanvas && roomId) {
+            sendCanvas("send_message", {
+                roomId,
+                slug: shapes[shapes.length - 1]
+            });
+        }
     }
 
     function handleOnMouseMove(e: MouseEvent) {
@@ -60,13 +66,14 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
         size.height = e.offsetY - coords.initial.y;
 
         ctx!.lineWidth = 2;
-        ctx!.strokeStyle = 'white';
+        ctx!.strokeStyle = '#ffffff';
         ctx!.fillStyle = "#ffffff";
 
         if (type === "pencil") {
             pencil(ctx!, coords.initial.x, coords.initial.y, e.offsetX, e.offsetY);
             coords.initial.x = e.offsetX;
             coords.initial.y = e.offsetY;
+            pixels.push({ x: e.offsetX, y: e.offsetY });
             return;
         }
 
@@ -113,17 +120,30 @@ export function addExistingShapes(canvas: HTMLCanvasElement, ctx: CanvasRenderin
         if (shape.type == "rect") {
             drawRectangle(ctx, shape.cords.initial.x, shape.cords.initial.y, shape.size.w, shape.size.h);
         }
+
         if (shape.type == "circ") {
             drawCircle(ctx,
                 (shape.cords.initial.x + shape.cords.final.x) / 2,
                 (shape.cords.initial.y + shape.cords.final.y) / 2,
                 Math.max(Math.abs(shape.size.w), Math.abs(shape.size.h)) / 2);
         }
+
         if (shape.type === "line") {
             dawLine(ctx, {
                 initial: { x: shape.cords.initial.x, y: shape.cords.initial.y },
                 final: { x: shape.cords.final.x, y: shape.cords.final.y }
             });
+        }
+
+        if (shape.type === "pencil" && shape.pixels && shape.pixels.length > 2) {
+            let lastX = shape.pixels[0]!.x;
+            let lastY = shape.pixels[0]!.y;
+
+            for (let i = 1; i < shape.pixels.length; i++) {
+                pencil(ctx, lastX, lastY, shape.pixels[i]!.x, shape.pixels[i]!.y);
+                lastX = shape.pixels[i]!.x;
+                lastY = shape.pixels[i]!.y;
+            }
         }
     });
 }
