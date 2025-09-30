@@ -9,7 +9,7 @@ interface DrawParamTypes {
     roomId: string;
 }
 
-const pixels: { x: number, y: number }[] = [];
+let pixels: { x: number, y: number }[] = []; // for pencil feature
 
 export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamTypes) {
     const ctx = canvas.getContext("2d");
@@ -24,6 +24,7 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
 
     function handleOnMouseDown(e: MouseEvent) {
         isClicked = true;
+        if (type === "eraser") return;
         coords.initial.x = e.offsetX;
         coords.initial.y = e.offsetY;
         if (type === "pencil") {
@@ -45,8 +46,8 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
                 final: { x: coords.final.x, y: coords.final.y },
             },
             size: {
-                h: coords.final.y - coords.initial.y,
-                w: coords.final.x - coords.initial.x
+                h: Math.abs(coords.final.y - coords.initial.y),
+                w: Math.abs(coords.final.x - coords.initial.x)
             },
             ...(type === "pencil" && { pixels })
         });
@@ -57,10 +58,27 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
                 slug: shapes[shapes.length - 1]
             });
         }
+        pixels = [];
     }
 
     function handleOnMouseMove(e: MouseEvent) {
         if (!isClicked) return;
+
+        if (type === "eraser" && shapes.length > 0) {
+            console.log(e.offsetX, e.offsetY)
+            // shapes = shapes.filter(shape => {
+            //     const x1 = shape.cords.initial.x; 
+            //     const y1 = shape.cords.initial.y;
+            //     const x2 = shape.cords.final.x;
+            //     const y2 = shape.cords.final.y;
+
+            //     if (!((e.offsetX >= x1 && e.offsetX <= x2) && (e.offsetY >= y1 && e.offsetY <= y2))) {
+            //         return shape;
+            //     }
+            // });
+            // addExistingShapes(canvas, ctx!, shapes);
+            return;
+        }
 
         size.width = e.offsetX - coords.initial.x;
         size.height = e.offsetY - coords.initial.y;
@@ -70,9 +88,7 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
         ctx!.fillStyle = "#ffffff";
 
         if (type === "pencil") {
-            pencil(ctx!, coords.initial.x, coords.initial.y, e.offsetX, e.offsetY);
-            coords.initial.x = e.offsetX;
-            coords.initial.y = e.offsetY;
+            pencil(ctx!, pixels[pixels.length - 1]!.x, pixels[pixels.length - 1]!.y, e.offsetX, e.offsetY);
             pixels.push({ x: e.offsetX, y: e.offsetY });
             return;
         }
@@ -108,13 +124,12 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
     };
 }
 
-
-
 export function addExistingShapes(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, shapes: Shapes[]) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.lineWidth = 2
-    ctx.strokeStyle = 'white';
+    ctx.strokeStyle = '#ffffff';
+    ctx.fillStyle = "#ffffff";
 
     shapes.forEach(shape => {
         if (shape.type == "rect") {
