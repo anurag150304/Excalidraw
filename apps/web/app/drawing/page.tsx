@@ -77,6 +77,7 @@ function Canvas() {
                 res.data.canvas.map((val: { slug: string }) => {
                     shapes.current.push(JSON.parse(val.slug));
                 });
+                console.log(shapes.current);
                 addExistingShapes(canvasRef.current!, canvasRef.current!.getContext("2d")!, shapes.current);
             })
             .catch((err) => {

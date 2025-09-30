@@ -32,7 +32,7 @@ export function pencil(ctx: CanvasRenderingContext2D, x1: number, y1: number, x2
         if (x1 === x2 && y1 === y2) break;
 
         const d2 = 2 * dp; // simplifying the integer arithmetic (dp).
-        if (d2 > -dy) { dp -= dy; x1 += sx }; // checks whether dp exceeds the current dy cord, then we've to increase the x cord by 1 and decrease the dp by dy cord
-        if (d2 < dx) { dp += dx; y1 += sy }; // // checks whether dp exceeds the current dx cord, then we've to increase the y cord by 1 and increase the dp by dx cord
+        if (d2 > -dy) { dp -= dy; x1 += sx }; // checks whether dp exceeds the current (dy) cord, then we've to increase the x cord by 1 and decrease the dp by dy cord
+        if (d2 < dx) { dp += dx; y1 += sy }; // // checks whether dp is lower then the current (dx) cord, then we've to increase the y cord by 1 and increase the dp by dx cord
     }
 }
