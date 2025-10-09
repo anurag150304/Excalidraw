@@ -1,5 +1,6 @@
 import { Coords, DataType, Shapes } from "@repo/types/commonTypes"
 import { dawLine, drawCircle, drawRectangle, pencil } from "./shapes";
+import axios from "axios";
 
 interface DrawParamTypes {
     type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser";
@@ -34,7 +35,12 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
 
     function handleOnMouseUp(e: MouseEvent) {
         isClicked = false;
-        if (type === "eraser") return;
+
+        if (type === "eraser") {
+            axios.post("/api/update", { shapes, roomId })
+                .catch(err => console.log(err))
+            return;
+        }
 
         coords.final.x = e.offsetX;
         coords.final.y = e.offsetY;
@@ -65,18 +71,17 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
         if (!isClicked) return;
 
         if (type === "eraser" && shapes.length > 0) {
-            console.log(e.offsetX, e.offsetY)
-            // shapes = shapes.filter(shape => {
-            //     const x1 = shape.cords.initial.x; 
-            //     const y1 = shape.cords.initial.y;
-            //     const x2 = shape.cords.final.x;
-            //     const y2 = shape.cords.final.y;
+            shapes = shapes.filter(shape => {
+                const x1 = shape.cords.initial.x;
+                const y1 = shape.cords.initial.y;
+                const x2 = shape.cords.final.x;
+                const y2 = shape.cords.final.y;
 
-            //     if (!((e.offsetX >= x1 && e.offsetX <= x2) && (e.offsetY >= y1 && e.offsetY <= y2))) {
-            //         return shape;
-            //     }
-            // });
-            // addExistingShapes(canvas, ctx!, shapes);
+                if (!((e.offsetX >= x1 && e.offsetX <= x2) && (e.offsetY >= y1 && e.offsetY <= y2))) {
+                    return shape;
+                }
+            });
+            addExistingShapes(canvas, ctx!, shapes);
             return;
         }
 
@@ -87,28 +92,26 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
         ctx!.strokeStyle = '#ffffff';
         ctx!.fillStyle = "#ffffff";
 
-        if (type === "pencil") {
-            pencil(ctx!, pixels[pixels.length - 1]!.x, pixels[pixels.length - 1]!.y, e.offsetX, e.offsetY);
-            pixels.push({ x: e.offsetX, y: e.offsetY });
-            return;
-        }
+        switch (type) {
+            case "rect": addExistingShapes(canvas, ctx!, shapes);
+                drawRectangle(ctx!, coords.initial.x, coords.initial.y, size.width, size.height);
+                break;
 
-        addExistingShapes(canvas, ctx!, shapes);
+            case "circ": addExistingShapes(canvas, ctx!, shapes);
+                drawCircle(ctx!,
+                    (e.clientX + coords.initial.x) / 2,
+                    (e.clientY + coords.initial.y) / 2,
+                    Math.max(Math.abs(size.width), Math.abs(size.height)) / 2);
+                break;
 
-        if (type === "rect") {
-            drawRectangle(ctx!, coords.initial.x, coords.initial.y, size.width, size.height);
-        }
+            case "line": addExistingShapes(canvas, ctx!, shapes);
+                dawLine(ctx!, { initial: { x: coords.initial.x, y: coords.initial.y }, final: { x: e.offsetX, y: e.offsetY } });
+                break;
 
-        if (type === "circ") {
-            drawCircle(ctx!,
-                (e.clientX + coords.initial.x) / 2,
-                (e.clientY + coords.initial.y) / 2,
-                Math.max(Math.abs(size.width), Math.abs(size.height)) / 2
-            );
-        }
-
-        if (type === "line") {
-            dawLine(ctx!, { initial: { x: coords.initial.x, y: coords.initial.y }, final: { x: e.offsetX, y: e.offsetY } });
+            case "pencil": pencil(ctx!, pixels[pixels.length - 1]!.x, pixels[pixels.length - 1]!.y, e.offsetX, e.offsetY);
+                pixels.push({ x: e.offsetX, y: e.offsetY });
+                break;
+            default: return;
         }
 
     }
