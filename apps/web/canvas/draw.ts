@@ -4,7 +4,8 @@ import axios from "axios";
 
 interface DrawParamTypes {
     type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser";
-    canvas: HTMLCanvasElement;
+    mainCanvas: HTMLCanvasElement;
+    drawCanvas: HTMLCanvasElement;
     shapes: Shapes[];
     sendCanvas: (eventName: string, data: Partial<DataType>) => void;
     roomId: string;
@@ -12,9 +13,10 @@ interface DrawParamTypes {
 
 let pixels: { x: number, y: number }[] = []; // for pencil feature
 
-export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamTypes) {
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return () => { };
+export function draw({ mainCanvas, drawCanvas, shapes, sendCanvas, roomId, type }: DrawParamTypes) {
+    const ctx1 = mainCanvas.getContext("2d");
+    const ctx2 = drawCanvas.getContext("2d");
+    if (!ctx1 || !ctx2) return () => { };
 
     const coords: Coords = {
         initial: { x: 0, y: 0 },
@@ -53,10 +55,13 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
             },
             size: {
                 h: Math.abs(coords.final.y - coords.initial.y),
-                w: Math.abs(coords.final.x - coords.initial.x)
+                w: type === "rect" ? coords.final.x - coords.initial.x : Math.abs(coords.final.x - coords.initial.x)
             },
             ...(type === "pencil" && { pixels })
         });
+
+        ctx2!.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        addExistingShapes(mainCanvas, ctx1!, shapes);
 
         if (sendCanvas && roomId) {
             sendCanvas("send_message", {
@@ -70,45 +75,45 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
     function handleOnMouseMove(e: MouseEvent) {
         if (!isClicked) return;
 
-        if (type === "eraser" && shapes.length > 0) {
-            shapes = shapes.filter(shape => {
-                const x1 = shape.cords.initial.x;
-                const y1 = shape.cords.initial.y;
-                const x2 = shape.cords.final.x;
-                const y2 = shape.cords.final.y;
+        // if (type === "eraser" && shapes.length > 0) {
+        //     shapes = shapes.filter(shape => {
+        //         const x1 = shape.cords.initial.x;
+        //         const y1 = shape.cords.initial.y;
+        //         const x2 = shape.cords.final.x;
+        //         const y2 = shape.cords.final.y;
 
-                if (!((e.offsetX >= x1 && e.offsetX <= x2) && (e.offsetY >= y1 && e.offsetY <= y2))) {
-                    return shape;
-                }
-            });
-            addExistingShapes(canvas, ctx!, shapes);
-            return;
-        }
+        //         if (!((e.offsetX >= x1 && e.offsetX <= x2) && (e.offsetY >= y1 && e.offsetY <= y2))) {
+        //             return shape;
+        //         }
+        //     });
+        //     addExistingShapes(mainCanvas, ctx1!, shapes);
+        //     return;
+        // }
 
         size.width = e.offsetX - coords.initial.x;
         size.height = e.offsetY - coords.initial.y;
 
-        ctx!.lineWidth = 2;
-        ctx!.strokeStyle = '#ffffff';
-        ctx!.fillStyle = "#ffffff";
+        ctx2!.lineWidth = 2;
+        ctx2!.strokeStyle = '#ffffff';
+        ctx2!.fillStyle = "#ffffff";
 
         switch (type) {
-            case "rect": addExistingShapes(canvas, ctx!, shapes);
-                drawRectangle(ctx!, coords.initial.x, coords.initial.y, size.width, size.height);
+            case "rect": ctx2!.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                drawRectangle(ctx2!, coords.initial.x, coords.initial.y, size.width, size.height);
                 break;
 
-            case "circ": addExistingShapes(canvas, ctx!, shapes);
-                drawCircle(ctx!,
+            case "circ": ctx2!.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                drawCircle(ctx2!,
                     (e.clientX + coords.initial.x) / 2,
                     (e.clientY + coords.initial.y) / 2,
                     Math.max(Math.abs(size.width), Math.abs(size.height)) / 2);
                 break;
 
-            case "line": addExistingShapes(canvas, ctx!, shapes);
-                dawLine(ctx!, { initial: { x: coords.initial.x, y: coords.initial.y }, final: { x: e.offsetX, y: e.offsetY } });
+            case "line": ctx2!.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                dawLine(ctx2!, { initial: { x: coords.initial.x, y: coords.initial.y }, final: { x: e.offsetX, y: e.offsetY } });
                 break;
 
-            case "pencil": pencil(ctx!, pixels[pixels.length - 1]!.x, pixels[pixels.length - 1]!.y, e.offsetX, e.offsetY);
+            case "pencil": pencil(ctx2!, pixels[pixels.length - 1]!.x, pixels[pixels.length - 1]!.y, e.offsetX, e.offsetY);
                 pixels.push({ x: e.offsetX, y: e.offsetY });
                 break;
             default: return;
@@ -116,14 +121,14 @@ export function draw({ canvas, shapes, sendCanvas, roomId, type }: DrawParamType
 
     }
 
-    canvas.addEventListener("mousedown", handleOnMouseDown);
-    canvas.addEventListener("mouseup", handleOnMouseUp);
-    canvas.addEventListener("mousemove", handleOnMouseMove);
+    drawCanvas.addEventListener("mousedown", handleOnMouseDown);
+    drawCanvas.addEventListener("mouseup", handleOnMouseUp);
+    drawCanvas.addEventListener("mousemove", handleOnMouseMove);
 
     return () => {
-        canvas.removeEventListener("mousedown", handleOnMouseDown);
-        canvas.removeEventListener("mouseup", handleOnMouseUp);
-        canvas.removeEventListener("mousemove", handleOnMouseMove);
+        drawCanvas.removeEventListener("mousedown", handleOnMouseDown);
+        drawCanvas.removeEventListener("mouseup", handleOnMouseUp);
+        drawCanvas.removeEventListener("mousemove", handleOnMouseMove);
     };
 }
 

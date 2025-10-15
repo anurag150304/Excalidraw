@@ -11,21 +11,21 @@ import { PiPencilSimpleLight } from "react-icons/pi";
 import { PiPencilSimpleFill } from "react-icons/pi";
 import { CiEraser } from "react-icons/ci";
 import { draw } from "../canvas/draw";
-import { sendMessage } from "../lib/socket.config";
+import { sendMessage } from "../config/socket.config";
 import { FaEraser } from "react-icons/fa";
 
-function TopPanel({ canvas, shapes, roomId }: { canvas: HTMLCanvasElement; shapes: Shapes[]; roomId: string; }) {
+function TopPanel({ mainCanvas, drawCanvas, shapes, roomId }: { mainCanvas: HTMLCanvasElement; drawCanvas: HTMLCanvasElement; shapes: Shapes[]; roomId: string; }) {
     const [tool, setTool] = useState<ToolsType>({ lock: true, rect: false, circ: false, line: false, pencil: false, eraser: false });
     const cleanupRef = useRef<() => void>(() => { });
 
     function executeDrawTool(type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser") {
         setTool({ lock: false, rect: false, circ: false, line: false, pencil: false, eraser: false, [type]: true });
         cleanupRef.current?.();
-        cleanupRef.current = draw({ canvas, shapes, type, sendCanvas: sendMessage, roomId });
+        cleanupRef.current = draw({ mainCanvas, drawCanvas, shapes, type, sendCanvas: sendMessage, roomId });
     }
 
     return (
-        <div className="absolute z-20 text-white flex justify-center items-center gap-4 bg-[#232329] py-1.5 px-2 rounded-lg left-1/2 -translate-x-1/2 top-4">
+        <div className="absolute z-50 text-white flex justify-center items-center gap-4 bg-[#232329] py-1.5 px-2 rounded-lg left-1/2 -translate-x-1/2 top-4">
             <CanavasBtn
                 active={tool.lock}
                 icon={<CiUnlock className="text-xl" />}

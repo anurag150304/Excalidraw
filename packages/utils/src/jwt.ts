@@ -6,7 +6,7 @@ interface JWTType extends JwtPayload {
 
 export function generateToken(email: string, secretKey: string) {
     try {
-        const token = jwt.sign({ email }, secretKey, { expiresIn: '24h' });
+        const token = jwt.sign({ email }, secretKey);
         return { token };
     } catch (err) {
         console.log((err as Error).message);
