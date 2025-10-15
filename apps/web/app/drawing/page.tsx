@@ -6,7 +6,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { addExistingShapes } from "../../canvas/draw";
 import { DataType, Shapes } from "@repo/types/commonTypes";
 import { useRouter, useSearchParams } from "next/navigation";
-import { InitializeSocket, receiveMessage, sendMessage, socket } from "../../lib/socket.config";
+import { InitializeSocket, receiveMessage, sendMessage, socket } from "../../config/socket.config";
 import TopPanel from "../../components/Top.pannel";
 
 export default function CanvasPage() {
@@ -18,7 +18,8 @@ export default function CanvasPage() {
 }
 
 function Canvas() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const mainCanvas = useRef<HTMLCanvasElement>(null);
+    const drawCanvas = useRef<HTMLCanvasElement>(null);
     const [roomId, setRooId] = useState<string>('');
     const shapes = useRef<Shapes[]>([]);
     const params = useSearchParams();
@@ -26,7 +27,15 @@ function Canvas() {
     const router = useRouter();
 
     useEffect(() => {
-        if (session.status !== "authenticated" || !canvasRef.current) return;
+        if (session.status !== "authenticated" || !mainCanvas.current || !drawCanvas.current) return;
+        mainCanvas.current.classList.remove("opacity-0")
+        drawCanvas.current.classList.remove("opacity-0")
+
+        mainCanvas.current.height = window.innerHeight;
+        mainCanvas.current.width = window.innerWidth;
+
+        drawCanvas.current.height = window.innerHeight;
+        drawCanvas.current.width = window.innerWidth;
 
         const roomId = params.get("roomId");
         if (!roomId) {
@@ -36,7 +45,7 @@ function Canvas() {
 
         setRooId(roomId);
 
-        InitializeSocket(session.data.user.accessToken);
+        InitializeSocket(session.data.user?.accessToken);
         sendMessage("join", { roomId });
         fetchAllCanvas(roomId);
 
@@ -59,10 +68,10 @@ function Canvas() {
 
     const handleReceiveMessage = (data: { sender: string; slug: Shapes }) => {
         shapes.current.push(data.slug);
-        if (canvasRef.current) {
-            const ctx = canvasRef.current.getContext("2d");
+        if (mainCanvas.current) {
+            const ctx = mainCanvas.current.getContext("2d");
             if (ctx) {
-                addExistingShapes(canvasRef.current, ctx, shapes.current);
+                addExistingShapes(mainCanvas.current, ctx, shapes.current);
             }
         }
     };
@@ -77,8 +86,7 @@ function Canvas() {
                 res.data.canvas.map((val: { slug: string }) => {
                     shapes.current.push(JSON.parse(val.slug));
                 });
-                console.log(shapes.current);
-                addExistingShapes(canvasRef.current!, canvasRef.current!.getContext("2d")!, shapes.current);
+                addExistingShapes(mainCanvas.current!, mainCanvas.current!.getContext("2d")!, shapes.current);
             })
             .catch((err) => {
                 console.log(err);
@@ -88,8 +96,10 @@ function Canvas() {
 
     return (
         <main className="relative h-screen w-screen overflow-hidden">
-            {canvasRef.current && shapes.current && roomId && (<TopPanel canvas={canvasRef.current} shapes={shapes.current} roomId={roomId} />)}
-            <canvas ref={canvasRef} className="bg-[#121212]" height={window.innerHeight} width={window.innerWidth} />
+            {mainCanvas.current && drawCanvas.current && shapes.current && roomId && (
+                <TopPanel mainCanvas={mainCanvas.current} drawCanvas={drawCanvas.current} shapes={shapes.current} roomId={roomId} />)}
+            <canvas ref={mainCanvas} className="bg-[#121212] absolute z-30 opacity-0" /> {/* Using two canvases layer optimization*/}
+            <canvas ref={drawCanvas} className="bg-[#12121200] absolute z-40 opacity-0" /> {/* 2nd for drawing shapes, and 1st for storing shapes */}
         </main>
     )
 }

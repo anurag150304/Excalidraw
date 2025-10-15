@@ -8,9 +8,9 @@ dotenv.config({
 });
 
 import { Server, Socket } from "socket.io";
-import dbClient from "@repo/db-config/dbClient"
-import { validateToken } from "@repo/utils/jwt"
-import redisClient from "@repo/redis/redisClient"
+import dbClient from "@repo/db-config/dbClient";
+import { validateToken } from "@repo/utils/jwt";
+import redisClient from "@repo/redis/redisClient";
 
 interface UserSocket extends Socket {
     userId: string;
