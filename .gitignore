@@ -31,6 +31,10 @@ build
 **/build/
 **/.next/
 
+# prisma
+packages/db-config/generated/
+packages/db-config/prisma/migrations/
+
 # turbo
 .turbo
 turbo.log*

@@ -6,13 +6,12 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc",
+    "dev": "tsc -b",
     "build": "tsc -b"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.13.1",
   "devDependencies": {
     "@repo/typescript-config": "workspace:*"
   },

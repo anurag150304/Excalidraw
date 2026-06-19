@@ -5,7 +5,7 @@
   "main": "./src/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsc && node ./dist/socket.js",
+    "dev": "tsc -b && node ./dist/socket.js",
     "build": "tsc -b",
     "start": "node ./dist/socket.js"
   },

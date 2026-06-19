@@ -5,13 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsc",
+    "dev": "tsc -b",
     "build": "tsc -b"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.13.1",
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "zod": "^4.0.5"

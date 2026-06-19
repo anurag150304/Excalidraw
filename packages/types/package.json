@@ -12,9 +12,13 @@
   "license": "ISC",
   "devDependencies": {
     "@repo/zod-validations": "workspace:*",
+    "@types/react": "^19.2.2",
     "zod": "^4.0.5"
   },
   "exports": {
     "./*": "./*.ts"
+  },
+  "dependencies": {
+    "react": "^19.2.0"
   }
 }

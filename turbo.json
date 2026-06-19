@@ -3,11 +3,12 @@
   "globalEnv": [
     "PORT",
     "SOCKET_URL",
-    "NEXTAUTH_SECRET",
     "REDIS_HOST",
     "REDIS_PORT",
+    "NEXTAUTH_URL",
+    "DATABASE_URL",
     "REDIS_PASSWORD",
-    "NEXTAUTH_URL"
+    "NEXTAUTH_SECRET"
   ],
   "ui": "tui",
   "tasks": {
@@ -17,12 +18,14 @@
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
-        ".env"
+        ".env",
+        "packages/db-config/prisma/schema.prisma"
       ],
       "outputs": [
         "dist/**",
         ".next/**",
-        "!.next/cache/**"
+        "!.next/cache/**",
+        "packages/db-config/prisma/migrations/**"
       ]
     },
     "lint": {
