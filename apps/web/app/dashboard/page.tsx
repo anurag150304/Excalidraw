@@ -112,7 +112,9 @@ function ClientDashboard() {
 
     setJoining(true);
     try {
-      const res = await axios.get("/api/user/room/get", { params: { roomId: id } });
+      const res = await axios.get("/api/user/room/get", {
+        params: { roomId: id },
+      });
       if (res.status === 200) {
         router.push(`/drawing?roomId=${res.data?.roomId ?? id}`);
       }
@@ -160,7 +162,9 @@ function ClientDashboard() {
           <section className="flex flex-col gap-6">
             <span className="flex w-fit items-center gap-1.5 rounded-full border border-[#3e325b] bg-[#1b1036] px-3 py-2 text-[#fffffff7]">
               <LuSparkles className="h-4 w-4 text-[#5d5ff2]" />
-              <span className="text-sm font-medium">Your creative workspace</span>
+              <span className="text-sm font-medium">
+                Your creative workspace
+              </span>
             </span>
             <div className="flex flex-col gap-3 text-white">
               <h1 className="text-4xl font-semibold md:text-5xl">
@@ -182,7 +186,9 @@ function ClientDashboard() {
                   <LuPlus className="h-5 w-5" />
                 </span>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Create Room</h2>
+                  <h2 className="text-lg font-semibold text-white">
+                    Create Room
+                  </h2>
                   <p className="text-sm font-light opacity-60">
                     Start a fresh canvas and invite others
                   </p>
@@ -218,7 +224,10 @@ function ClientDashboard() {
                     <button
                       type="button"
                       onClick={() =>
-                        setRoom((prev) => ({ ...prev, roomId: generateRoomId() }))
+                        setRoom((prev) => ({
+                          ...prev,
+                          roomId: generateRoomId(),
+                        }))
                       }
                       className="shrink-0 rounded-xl border border-[#ffffff25] px-4 py-3 text-xs font-medium text-white/70 transition-colors hover:border-[#6b4def] hover:text-white"
                     >
@@ -254,7 +263,9 @@ function ClientDashboard() {
                   <LuLogIn className="h-5 w-5" />
                 </span>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Join Room</h2>
+                  <h2 className="text-lg font-semibold text-white">
+                    Join Room
+                  </h2>
                   <p className="text-sm font-light opacity-60">
                     Enter a room ID shared by someone else
                   </p>
@@ -305,7 +316,8 @@ function ClientDashboard() {
               <div>
                 <h2 className="text-2xl font-bold text-white">Your Rooms</h2>
                 <p className="text-sm font-light opacity-50">
-                  {rooms.length} room{rooms.length !== 1 ? "s" : ""} in your workspace
+                  {rooms.length} room{rooms.length !== 1 ? "s" : ""} in your
+                  workspace
                 </p>
               </div>
             </div>
@@ -323,8 +335,8 @@ function ClientDashboard() {
                 <div className="flex flex-col gap-1">
                   <p className="text-lg font-medium text-white">No rooms yet</p>
                   <p className="max-w-sm text-sm font-light opacity-50">
-                    Create your first room above to start drawing and collaborating
-                    with others.
+                    Create your first room above to start drawing and
+                    collaborating with others.
                   </p>
                 </div>
               </div>

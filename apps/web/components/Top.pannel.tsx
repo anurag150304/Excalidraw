@@ -33,12 +33,29 @@ function TopPanel({
     pencil: false,
     eraser: false,
   });
-  const cleanupRef = useRef<() => void>(() => { });
+  const cleanupRef = useRef<() => void>(() => {});
 
-  function executeDrawTool(type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser") {
-    setTool({ lock: false, rect: false, circ: false, line: false, pencil: false, eraser: false, [type]: true });
+  function executeDrawTool(
+    type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser",
+  ) {
+    setTool({
+      lock: false,
+      rect: false,
+      circ: false,
+      line: false,
+      pencil: false,
+      eraser: false,
+      [type]: true,
+    });
     cleanupRef.current?.();
-    cleanupRef.current = draw({ mainCanvas, drawCanvas, shapes, type, sendCanvas: sendMessage, roomId });
+    cleanupRef.current = draw({
+      mainCanvas,
+      drawCanvas,
+      shapes,
+      type,
+      sendCanvas: sendMessage,
+      roomId,
+    });
   }
 
   return (

@@ -60,7 +60,10 @@ io.on("connection", (socket) => {
     }
 
     const room = await DB.rooms.findFirst({ where: { roomId } });
-    if (!room) userSocket.emit("socker_error", { error: "No room created with this room Id" });
+    if (!room)
+      userSocket.emit("socker_error", {
+        error: "No room created with this room Id",
+      });
 
     const allSockets = rooms.get(roomId) ?? [];
     if (!allSockets.includes(userSocket)) {
