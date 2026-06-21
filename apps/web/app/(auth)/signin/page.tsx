@@ -28,7 +28,7 @@ export default function Signin() {
       if (response.error) alert(response.error);
       else {
         alert("Logged In successully");
-        router.push("/");
+        router.push("/dashboard");
       }
     }
   };

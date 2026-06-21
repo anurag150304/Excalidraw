@@ -23,7 +23,7 @@ export default function Signup() {
     if (!data.firstname || !data.email || !data.password) return;
 
     axios
-      .post("/api/signup", data)
+      .post("/api/user/auth/signup", data)
       .then((res) => {
         setData({ firstname: "", lastname: "", email: "", password: "" });
         alert(res.data.message);

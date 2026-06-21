@@ -61,6 +61,7 @@ export const UsersScalarFieldEnum = {
 };
 export const RoomsScalarFieldEnum = {
     id: 'id',
+    name: 'name',
     roomId: 'roomId',
     adminId: 'adminId',
     createdAt: 'createdAt'

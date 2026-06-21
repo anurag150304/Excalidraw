@@ -1,11 +1,11 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../config/auth.config";
-import Header from "../components/Header";
-import Image from "next/image";
-import Button from "@repo/ui/Button";
 import { GoArrowRight, GoVideo } from "react-icons/go";
-import Link from "next/link";
+import { authOptions } from "../config/auth.config";
 import { AddsType } from "@repo/types/commonTypes";
+import { getServerSession } from "next-auth";
+import Header from "../components/Header";
+import Button from "@repo/ui/Button";
+import Image from "next/image";
+import Link from "next/link";
 import {
   LuEraser,
   LuGrid2X2,
@@ -15,10 +15,10 @@ import {
   LuUndo2,
   LuZoomIn,
 } from "react-icons/lu";
-import Addvertise from "../components/Add.block";
 import { FaRegCircle, FaRegSquare } from "react-icons/fa";
-import { Fragment } from "react";
+import Addvertise from "../components/Add.block";
 import { FiArrowRight } from "react-icons/fi";
+import { Fragment } from "react";
 
 export default async function Page() {
   const session = await getServerSession(authOptions);

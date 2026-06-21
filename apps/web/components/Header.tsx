@@ -15,7 +15,7 @@ export default function Header({ session }: { session: Session | null }) {
 
     isLogout(true);
     try {
-      await axios.get("/api/signout", {
+      await axios.get("/api/user/signout", {
         headers: { Authorization: `Bearer ${token}` },
       });
       signOut();

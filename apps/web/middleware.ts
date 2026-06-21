@@ -4,12 +4,10 @@ import { withAuth } from "next-auth/middleware";
 export default withAuth(
   function middleware() {
     return NextResponse.next();
-  },
-  {
-    callbacks: { authorized: ({ token }) => !!token },
-  },
-);
+  }, {
+  callbacks: { authorized: ({ token }) => !!token },
+});
 
 export const config = {
-  matcher: ["/drawing", "/api/signout", "/api/canvas", "/api/dashboard"],
+  matcher: ["/drawing", "/dashboard", "/api/user/:path*", "/api/canvas/:path*"],
 };

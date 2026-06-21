@@ -3,16 +3,16 @@
 import axios from "axios";
 import { SessionProvider, useSession } from "next-auth/react";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { addExistingShapes } from "../../canvas/draw";
-import { DataType, Shapes } from "@repo/types/commonTypes";
+import { addExistingShapes } from "../../../canvas/draw";
+import { Shapes } from "@repo/types/commonTypes";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   InitializeSocket,
   receiveMessage,
   sendMessage,
   socket,
-} from "../../config/socket.config";
-import TopPanel from "../../components/Top.pannel";
+} from "../../../config/socket.config";
+import TopPanel from "../../../components/Top.pannel";
 
 export default function CanvasPage() {
   return (
@@ -40,6 +40,13 @@ function Canvas() {
       !drawCanvas.current
     )
       return;
+
+    const roomId = params.get("roomId");
+    if (!roomId) {
+      alert("Room ID is required");
+      return router.push("/dashboard");
+    }
+
     mainCanvas.current.classList.remove("opacity-0");
     drawCanvas.current.classList.remove("opacity-0");
 
@@ -48,12 +55,6 @@ function Canvas() {
 
     drawCanvas.current.height = window.innerHeight;
     drawCanvas.current.width = window.innerWidth;
-
-    const roomId = params.get("roomId");
-    if (!roomId) {
-      alert("Room ID is required");
-      return router.push("/");
-    }
 
     setRooId(roomId);
 
@@ -65,13 +66,6 @@ function Canvas() {
     receiveMessage("socket_error", handleSocketError);
 
     return () => {
-      socket?.off("join", (eventName: string, data: Partial<DataType>) => {
-        if (socket) {
-          socket.emit(eventName, data);
-        } else {
-          console.error("Socket not connected");
-        }
-      });
       socket?.off("recieve_message", handleReceiveMessage);
       socket?.off("socket_error", handleSocketError);
     };
@@ -91,7 +85,7 @@ function Canvas() {
 
   async function fetchAllCanvas(roomId: string) {
     axios
-      .get("/api/canvas", { params: { roomId } })
+      .get("/api/canvas/all", { params: { roomId } })
       .then((res) => {
         if (!res.data.canvas || !res.data.canvas.length) return;
 
@@ -120,16 +114,18 @@ function Canvas() {
           roomId={roomId}
         />
       )}
+      {/* Using two canvases layer optimization*/}
+
+      {/* 1st or main canvas for storing shapes */}
       <canvas
         ref={mainCanvas}
         className="bg-[#121212] absolute z-30 opacity-0"
-      />{" "}
-      {/* Using two canvases layer optimization*/}
+      />
+      {/* 2nd for drawing shapes */}
       <canvas
         ref={drawCanvas}
         className="bg-[#12121200] absolute z-40 opacity-0"
-      />{" "}
-      {/* 2nd for drawing shapes, and 1st for storing shapes */}
+      />
     </main>
   );
 }

@@ -13,7 +13,7 @@ function CanavasBtn({ icon, changeIcon, active, className, execute }: BtnType) {
       className={`${className}
             p-2 ${active ? "bg-[#403e6a] border-[#403e6a]" : "hover:bg-[#403e6a56] border-[#403e6a56]"}
             rounded-lg flex cursor-pointer
-            justify-center items-center border-1 border-[#232329]
+            justify-center items-center border border-[#232329]
             active:border-white transition-all`}
       onClick={execute}
     >

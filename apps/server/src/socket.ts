@@ -12,7 +12,7 @@ interface UserSocket extends Socket {
   email: string;
 }
 
-const rooms = new Map<string, UserSocket[]>();
+const rooms = new Map<string, UserSocket[]>(); // {roomId: [socket1, socket2, ...]}
 const io = new Server({
   cors: {
     origin: ["http://localhost:3001"],
@@ -21,6 +21,7 @@ const io = new Server({
   pingTimeout: 60_000,
 });
 
+// Socket authentication middleware
 io.use(async (socket, next) => {
   const userSocket: UserSocket = socket as UserSocket;
   const token = userSocket.handshake.headers.authorization?.split(" ")[1];
@@ -45,6 +46,7 @@ io.use(async (socket, next) => {
   }
 });
 
+// Socket connection and event handling
 io.on("connection", (socket) => {
   const userSocket: UserSocket = socket as UserSocket;
   console.log(`Socket connected: ${userSocket.id}`);
@@ -58,14 +60,7 @@ io.on("connection", (socket) => {
     }
 
     const room = await DB.rooms.findFirst({ where: { roomId } });
-    if (!room) {
-      await DB.rooms.create({
-        data: {
-          roomId,
-          admin: { connect: { id: userSocket.userId } },
-        },
-      });
-    }
+    if (!room) userSocket.emit("socker_error", { error: "No room created with this room Id" });
 
     const allSockets = rooms.get(roomId) ?? [];
     if (!allSockets.includes(userSocket)) {
@@ -96,7 +91,7 @@ io.on("connection", (socket) => {
         },
       })
       .catch((err: Error) => {
-        console.log(err);
+        console.error(err);
         userSocket.emit("socket_error", { error: err.message });
         return;
       });

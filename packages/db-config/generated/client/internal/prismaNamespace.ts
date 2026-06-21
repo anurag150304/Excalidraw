@@ -680,6 +680,7 @@ export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof Us
 
 export const RoomsScalarFieldEnum = {
   id: 'id',
+  name: 'name',
   roomId: 'roomId',
   adminId: 'adminId',
   createdAt: 'createdAt'

@@ -48,6 +48,7 @@ export declare const UsersScalarFieldEnum: {
 export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum];
 export declare const RoomsScalarFieldEnum: {
     readonly id: "id";
+    readonly name: "name";
     readonly roomId: "roomId";
     readonly adminId: "adminId";
     readonly createdAt: "createdAt";

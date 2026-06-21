@@ -36,6 +36,7 @@ export type RoomsSumAggregateOutputType = {
 
 export type RoomsMinAggregateOutputType = {
   id: number | null
+  name: string | null
   roomId: string | null
   adminId: string | null
   createdAt: Date | null
@@ -43,6 +44,7 @@ export type RoomsMinAggregateOutputType = {
 
 export type RoomsMaxAggregateOutputType = {
   id: number | null
+  name: string | null
   roomId: string | null
   adminId: string | null
   createdAt: Date | null
@@ -50,6 +52,7 @@ export type RoomsMaxAggregateOutputType = {
 
 export type RoomsCountAggregateOutputType = {
   id: number
+  name: number
   roomId: number
   adminId: number
   createdAt: number
@@ -67,6 +70,7 @@ export type RoomsSumAggregateInputType = {
 
 export type RoomsMinAggregateInputType = {
   id?: true
+  name?: true
   roomId?: true
   adminId?: true
   createdAt?: true
@@ -74,6 +78,7 @@ export type RoomsMinAggregateInputType = {
 
 export type RoomsMaxAggregateInputType = {
   id?: true
+  name?: true
   roomId?: true
   adminId?: true
   createdAt?: true
@@ -81,6 +86,7 @@ export type RoomsMaxAggregateInputType = {
 
 export type RoomsCountAggregateInputType = {
   id?: true
+  name?: true
   roomId?: true
   adminId?: true
   createdAt?: true
@@ -175,6 +181,7 @@ export type RoomsGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type RoomsGroupByOutputType = {
   id: number
+  name: string
   roomId: string
   adminId: string
   createdAt: Date
@@ -205,6 +212,7 @@ export type RoomsWhereInput = {
   OR?: Prisma.RoomsWhereInput[]
   NOT?: Prisma.RoomsWhereInput | Prisma.RoomsWhereInput[]
   id?: Prisma.IntFilter<"Rooms"> | number
+  name?: Prisma.StringFilter<"Rooms"> | string
   roomId?: Prisma.StringFilter<"Rooms"> | string
   adminId?: Prisma.StringFilter<"Rooms"> | string
   createdAt?: Prisma.DateTimeFilter<"Rooms"> | Date | string
@@ -214,6 +222,7 @@ export type RoomsWhereInput = {
 
 export type RoomsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -227,6 +236,7 @@ export type RoomsWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RoomsWhereInput | Prisma.RoomsWhereInput[]
   OR?: Prisma.RoomsWhereInput[]
   NOT?: Prisma.RoomsWhereInput | Prisma.RoomsWhereInput[]
+  name?: Prisma.StringFilter<"Rooms"> | string
   adminId?: Prisma.StringFilter<"Rooms"> | string
   createdAt?: Prisma.DateTimeFilter<"Rooms"> | Date | string
   admin?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.UsersWhereInput>
@@ -235,6 +245,7 @@ export type RoomsWhereUniqueInput = Prisma.AtLeast<{
 
 export type RoomsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -250,12 +261,14 @@ export type RoomsScalarWhereWithAggregatesInput = {
   OR?: Prisma.RoomsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RoomsScalarWhereWithAggregatesInput | Prisma.RoomsScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Rooms"> | number
+  name?: Prisma.StringWithAggregatesFilter<"Rooms"> | string
   roomId?: Prisma.StringWithAggregatesFilter<"Rooms"> | string
   adminId?: Prisma.StringWithAggregatesFilter<"Rooms"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Rooms"> | Date | string
 }
 
 export type RoomsCreateInput = {
+  name: string
   roomId: string
   createdAt?: Date | string
   admin: Prisma.UsersCreateNestedOneWithoutRoomsInput
@@ -264,6 +277,7 @@ export type RoomsCreateInput = {
 
 export type RoomsUncheckedCreateInput = {
   id?: number
+  name: string
   roomId: string
   adminId: string
   createdAt?: Date | string
@@ -271,6 +285,7 @@ export type RoomsUncheckedCreateInput = {
 }
 
 export type RoomsUpdateInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admin?: Prisma.UsersUpdateOneRequiredWithoutRoomsNestedInput
@@ -279,6 +294,7 @@ export type RoomsUpdateInput = {
 
 export type RoomsUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   adminId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -287,18 +303,21 @@ export type RoomsUncheckedUpdateInput = {
 
 export type RoomsCreateManyInput = {
   id?: number
+  name: string
   roomId: string
   adminId: string
   createdAt?: Date | string
 }
 
 export type RoomsUpdateManyMutationInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RoomsUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   adminId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -316,6 +335,7 @@ export type RoomsOrderByRelationAggregateInput = {
 
 export type RoomsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -327,6 +347,7 @@ export type RoomsAvgOrderByAggregateInput = {
 
 export type RoomsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -334,6 +355,7 @@ export type RoomsMaxOrderByAggregateInput = {
 
 export type RoomsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -417,6 +439,7 @@ export type RoomsUpdateOneRequiredWithoutCanvasNestedInput = {
 }
 
 export type RoomsCreateWithoutAdminInput = {
+  name: string
   roomId: string
   createdAt?: Date | string
   canvas?: Prisma.CanvasCreateNestedManyWithoutRoomInput
@@ -424,6 +447,7 @@ export type RoomsCreateWithoutAdminInput = {
 
 export type RoomsUncheckedCreateWithoutAdminInput = {
   id?: number
+  name: string
   roomId: string
   createdAt?: Date | string
   canvas?: Prisma.CanvasUncheckedCreateNestedManyWithoutRoomInput
@@ -460,12 +484,14 @@ export type RoomsScalarWhereInput = {
   OR?: Prisma.RoomsScalarWhereInput[]
   NOT?: Prisma.RoomsScalarWhereInput | Prisma.RoomsScalarWhereInput[]
   id?: Prisma.IntFilter<"Rooms"> | number
+  name?: Prisma.StringFilter<"Rooms"> | string
   roomId?: Prisma.StringFilter<"Rooms"> | string
   adminId?: Prisma.StringFilter<"Rooms"> | string
   createdAt?: Prisma.DateTimeFilter<"Rooms"> | Date | string
 }
 
 export type RoomsCreateWithoutCanvasInput = {
+  name: string
   roomId: string
   createdAt?: Date | string
   admin: Prisma.UsersCreateNestedOneWithoutRoomsInput
@@ -473,6 +499,7 @@ export type RoomsCreateWithoutCanvasInput = {
 
 export type RoomsUncheckedCreateWithoutCanvasInput = {
   id?: number
+  name: string
   roomId: string
   adminId: string
   createdAt?: Date | string
@@ -495,6 +522,7 @@ export type RoomsUpdateToOneWithWhereWithoutCanvasInput = {
 }
 
 export type RoomsUpdateWithoutCanvasInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admin?: Prisma.UsersUpdateOneRequiredWithoutRoomsNestedInput
@@ -502,6 +530,7 @@ export type RoomsUpdateWithoutCanvasInput = {
 
 export type RoomsUncheckedUpdateWithoutCanvasInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   adminId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -509,11 +538,13 @@ export type RoomsUncheckedUpdateWithoutCanvasInput = {
 
 export type RoomsCreateManyAdminInput = {
   id?: number
+  name: string
   roomId: string
   createdAt?: Date | string
 }
 
 export type RoomsUpdateWithoutAdminInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   canvas?: Prisma.CanvasUpdateManyWithoutRoomNestedInput
@@ -521,6 +552,7 @@ export type RoomsUpdateWithoutAdminInput = {
 
 export type RoomsUncheckedUpdateWithoutAdminInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   canvas?: Prisma.CanvasUncheckedUpdateManyWithoutRoomNestedInput
@@ -528,6 +560,7 @@ export type RoomsUncheckedUpdateWithoutAdminInput = {
 
 export type RoomsUncheckedUpdateManyWithoutAdminInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -565,6 +598,7 @@ export type RoomsCountOutputTypeCountCanvasArgs<ExtArgs extends runtime.Types.Ex
 
 export type RoomsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  name?: boolean
   roomId?: boolean
   adminId?: boolean
   createdAt?: boolean
@@ -575,6 +609,7 @@ export type RoomsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 
 export type RoomsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  name?: boolean
   roomId?: boolean
   adminId?: boolean
   createdAt?: boolean
@@ -583,6 +618,7 @@ export type RoomsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type RoomsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  name?: boolean
   roomId?: boolean
   adminId?: boolean
   createdAt?: boolean
@@ -591,12 +627,13 @@ export type RoomsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type RoomsSelectScalar = {
   id?: boolean
+  name?: boolean
   roomId?: boolean
   adminId?: boolean
   createdAt?: boolean
 }
 
-export type RoomsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "roomId" | "adminId" | "createdAt", ExtArgs["result"]["rooms"]>
+export type RoomsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "roomId" | "adminId" | "createdAt", ExtArgs["result"]["rooms"]>
 export type RoomsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.UsersDefaultArgs<ExtArgs>
   canvas?: boolean | Prisma.Rooms$canvasArgs<ExtArgs>
@@ -617,6 +654,7 @@ export type $RoomsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    name: string
     roomId: string
     adminId: string
     createdAt: Date
@@ -1046,6 +1084,7 @@ export interface Prisma__RoomsClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface RoomsFieldRefs {
   readonly id: Prisma.FieldRef<"Rooms", 'Int'>
+  readonly name: Prisma.FieldRef<"Rooms", 'String'>
   readonly roomId: Prisma.FieldRef<"Rooms", 'String'>
   readonly adminId: Prisma.FieldRef<"Rooms", 'String'>
   readonly createdAt: Prisma.FieldRef<"Rooms", 'DateTime'>
