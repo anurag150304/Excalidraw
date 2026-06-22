@@ -41,7 +41,8 @@ export default function Signup() {
       if (err instanceof AxiosError) {
         if (err.response?.data?.errors)
           for (const val of err.response.data.errors) toast.error(val);
-        else if (err.response?.data?.error) toast.error(err.response.data.error);
+        else if (err.response?.data?.error)
+          toast.error(err.response.data.error);
         else toast.error("Failed to create account");
       } else {
         toast.error((err as Error).message);
@@ -104,7 +105,10 @@ export default function Signup() {
 
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="email" className="text-sm font-medium text-white/70">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-white/70"
+            >
               Email
             </label>
             <input

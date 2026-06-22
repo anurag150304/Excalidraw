@@ -11,9 +11,13 @@ export async function DELETE(req: NextRequest) {
     }
 
     const isAdmin = await DB.rooms.findFirst({ where: { roomId } });
-    if (!isAdmin) return NextResponse.json({ error: "Room not found!" }, { status: 404 });
+    if (!isAdmin)
+      return NextResponse.json({ error: "Room not found!" }, { status: 404 });
     if (isAdmin.adminId !== adminId) {
-      return NextResponse.json({ error: "Unauthorized Acion" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Unauthorized Acion" },
+        { status: 403 },
+      );
     }
 
     const room = await DB.rooms.delete({ where: { roomId } });

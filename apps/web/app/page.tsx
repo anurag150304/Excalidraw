@@ -186,13 +186,12 @@ export default async function Page() {
             ))}
           </div>
         </section>
-        <section className="w-full max-w-5xl rounded-3xl border border-[#ffffff20] bg-[#12101c] p-10 md:p-14 text-white text-center flex flex-col items-center gap-8"
+        <section
+          className="w-full max-w-5xl rounded-3xl border border-[#ffffff20] bg-[#12101c] p-10 md:p-14 text-white text-center flex flex-col items-center gap-8"
           style={{ boxShadow: "0px 0px 2.5rem #4a388544" }}
         >
           <div className="flex flex-col items-center gap-3">
-            <h2 className="text-4xl font-bold md:text-5xl">
-              Ready to Start
-            </h2>
+            <h2 className="text-4xl font-bold md:text-5xl">Ready to Start</h2>
             <h2 className="text-4xl font-bold text-[#5d5ff2] md:text-5xl">
               Creating?
             </h2>

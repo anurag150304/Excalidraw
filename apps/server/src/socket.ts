@@ -13,15 +13,19 @@ interface UserSocket extends Socket {
 }
 
 const rooms = new Map<string, UserSocket[]>(); // {roomId: [socket1, socket2, ...]}
-const globalIO = global as unknown as { io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> };
+const globalIO = global as unknown as {
+  io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+};
 
-export const io = globalIO.io || new Server({
-  cors: {
-    origin: ["http://localhost:3001"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  },
-  pingTimeout: 60_000,
-});
+export const io =
+  globalIO.io ||
+  new Server({
+    cors: {
+      origin: ["http://localhost:3001"],
+      methods: ["GET", "POST", "PUT", "DELETE"],
+    },
+    pingTimeout: 60_000,
+  });
 
 // Socket authentication middleware
 io.use(async (socket, next) => {

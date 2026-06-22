@@ -8,13 +8,7 @@ import Header from "../../components/Header";
 import Button from "@repo/ui/Button";
 import Spinner from "@repo/ui/Spinner";
 import { useToast } from "@repo/ui/ToastProvider";
-import {
-  LuCopy,
-  LuLogIn,
-  LuPlus,
-  LuSparkles,
-  LuTrash2,
-} from "react-icons/lu";
+import { LuCopy, LuLogIn, LuPlus, LuSparkles, LuTrash2 } from "react-icons/lu";
 import { GoArrowRight } from "react-icons/go";
 import { FiArrowRight } from "react-icons/fi";
 
@@ -64,7 +58,9 @@ function ClientDashboard() {
     (async () => {
       setLoadingRooms(true);
       try {
-        const res = await axios.get(`/api/user/room/all/${session.data.user.id}`);
+        const res = await axios.get(
+          `/api/user/room/all/${session.data.user.id}`,
+        );
         setRooms(res.data.rooms || []);
       } catch (err) {
         if (err instanceof AxiosError)
@@ -141,8 +137,8 @@ function ClientDashboard() {
       await axios.delete("/api/user/room/delete", {
         data: {
           roomId,
-          adminId: session.data?.user.id
-        }
+          adminId: session.data?.user.id,
+        },
       });
       setRooms((prev) => prev.filter((r) => r.roomId !== roomId));
       setConfirmDeleteId(null);

@@ -9,10 +9,7 @@ const sizeClasses = {
   lg: "h-8 w-8 border-[3px]",
 };
 
-export default function Spinner({
-  size = "md",
-  className = "",
-}: SpinnerProps) {
+export default function Spinner({ size = "md", className = "" }: SpinnerProps) {
   return (
     <span
       role="status"

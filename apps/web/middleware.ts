@@ -11,5 +11,11 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/drawing", "/dashboard", "/api/user/room/:path*", "/api/user/auth/signout", "/api/canvas/:path*"],
+  matcher: [
+    "/drawing",
+    "/dashboard",
+    "/api/user/room/:path*",
+    "/api/user/auth/signout",
+    "/api/canvas/:path*",
+  ],
 };

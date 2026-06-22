@@ -68,7 +68,6 @@ function Canvas() {
     receiveMessage("recieve_message", handleReceiveMessage);
     receiveMessage("socket_error", handleSocketError);
 
-
     function handleReceiveMessage(data: { sender: string; slug: Shapes }) {
       shapes.current.push(data.slug);
       if (mainCanvas.current) {
@@ -77,7 +76,7 @@ function Canvas() {
           addExistingShapes(mainCanvas.current, ctx, shapes.current);
         }
       }
-    };
+    }
 
     function handleSocketError(err: { error: string }) {
       toast.error(err.error);
