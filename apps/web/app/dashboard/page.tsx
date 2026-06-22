@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Button from "@repo/ui/Button";
+import Spinner from "@repo/ui/Spinner";
+import { useToast } from "@repo/ui/ToastProvider";
 import {
   LuCopy,
-  LuLoader,
   LuLogIn,
   LuPlus,
   LuSparkles,
@@ -53,27 +54,27 @@ function ClientDashboard() {
   const [creating, setCreating] = useState(false);
   const [joining, setJoining] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const session = useSession();
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     if (!session.data?.user?.id) return;
-    fetchAllUserRooms(session.data.user.id);
-  }, [session.data?.user?.id]);
-
-  async function fetchAllUserRooms(id: string) {
-    setLoadingRooms(true);
-    try {
-      const res = await axios.get(`/api/user/room/all/${id}`);
-      setRooms(res.data.rooms || []);
-    } catch (err) {
-      if (err instanceof AxiosError)
-        alert(err.response?.data?.error || "Failed to load rooms");
-      else alert((err as Error).message || "Failed to load rooms");
-    } finally {
-      setLoadingRooms(false);
-    }
-  }
+    (async () => {
+      setLoadingRooms(true);
+      try {
+        const res = await axios.get(`/api/user/room/all/${session.data.user.id}`);
+        setRooms(res.data.rooms || []);
+      } catch (err) {
+        if (err instanceof AxiosError)
+          toast.error(err.response?.data?.error || "Failed to load rooms");
+        else toast.error((err as Error).message || "Failed to load rooms");
+      } finally {
+        setLoadingRooms(false);
+      }
+    })();
+  }, [session.data?.user?.id, toast]);
 
   function updateRoom(e: ChangeEvent<HTMLInputElement>) {
     setRoom({ ...room, [e.target.name]: e.target.value });
@@ -81,7 +82,10 @@ function ClientDashboard() {
 
   async function createNewRoom() {
     const { name, roomId } = room;
-    if (!name.trim() || !roomId.trim()) return;
+    if (!name.trim() || !roomId.trim()) {
+      toast.error("Room name and ID are required");
+      return;
+    }
 
     const adminId = session.data!.user.id;
     setCreating(true);
@@ -92,15 +96,16 @@ function ClientDashboard() {
         adminId,
       });
       if (res.status === 201) {
+        toast.success("Room created successfully");
         const id = res.data?.roomId ?? roomId.trim();
         router.push(`/drawing?roomId=${id}`);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
         if (err.response?.data?.errors)
-          for (const e of err.response.data.errors) alert(e);
-        else alert(err.response?.data?.error || "Failed to create room");
-      } else alert((err as Error).message);
+          for (const e of err.response.data.errors) toast.error(e);
+        else toast.error(err.response?.data?.error || "Failed to create room");
+      } else toast.error((err as Error).message);
     } finally {
       setCreating(false);
     }
@@ -108,7 +113,10 @@ function ClientDashboard() {
 
   async function joinRoom(roomId?: string) {
     const id = (roomId ?? joinRoomId).trim();
-    if (!id) return;
+    if (!id) {
+      toast.error("Room ID is required");
+      return;
+    }
 
     setJoining(true);
     try {
@@ -120,24 +128,29 @@ function ClientDashboard() {
       }
     } catch (err) {
       if (err instanceof AxiosError)
-        alert(err.response?.data?.error || "Room not found");
-      else alert((err as Error).message);
+        toast.error(err.response?.data?.error || "Room not found");
+      else toast.error((err as Error).message);
     } finally {
       setJoining(false);
     }
   }
 
   async function deleteRoom(roomId: string) {
-    if (!confirm("Delete this room? This action cannot be undone.")) return;
-
     setDeletingId(roomId);
     try {
-      await axios.delete("/api/user/room/delete", { params: { roomId } });
+      await axios.delete("/api/user/room/delete", {
+        data: {
+          roomId,
+          adminId: session.data?.user.id
+        }
+      });
       setRooms((prev) => prev.filter((r) => r.roomId !== roomId));
+      setConfirmDeleteId(null);
+      toast.success("Room deleted successfully");
     } catch (err) {
       if (err instanceof AxiosError)
-        alert(err.response?.data?.error || "Failed to delete room");
-      else alert((err as Error).message);
+        toast.error(err.response?.data?.error || "Failed to delete room");
+      else toast.error((err as Error).message);
     } finally {
       setDeletingId(null);
     }
@@ -146,8 +159,9 @@ function ClientDashboard() {
   async function copyRoomId(roomId: string) {
     try {
       await navigator.clipboard.writeText(roomId);
+      toast.success("Room ID copied to clipboard");
     } catch {
-      alert("Could not copy room ID");
+      toast.error("Could not copy room ID");
     }
   }
 
@@ -156,31 +170,29 @@ function ClientDashboard() {
   return (
     <>
       <Header session={session.data} />
-      <main className="min-h-[calc(100vh-73px)] px-5 py-12 md:py-16 cursor-default">
+      <main className="min-h-[calc(100vh-73px)] cursor-default px-5 py-12 text-white md:py-16">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-12">
-          {/* Hero */}
           <section className="flex flex-col gap-6">
             <span className="flex w-fit items-center gap-1.5 rounded-full border border-[#3e325b] bg-[#1b1036] px-3 py-2 text-[#fffffff7]">
               <LuSparkles className="h-4 w-4 text-[#5d5ff2]" />
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-white">
                 Your creative workspace
               </span>
             </span>
-            <div className="flex flex-col gap-3 text-white">
-              <h1 className="text-4xl font-semibold md:text-5xl">
+            <div className="flex flex-col gap-3">
+              <h1 className="text-4xl font-semibold text-white md:text-5xl">
                 Welcome back,{" "}
                 <span className="text-[#5d5ff2]">{firstName}</span>
               </h1>
-              <p className="max-w-2xl text-lg font-light tracking-wide opacity-60">
+              <p className="max-w-2xl text-lg font-light tracking-wide text-white/60">
                 Create a new drawing room or jump back into one of your existing
                 canvases. Share the room ID to collaborate in real time.
               </p>
             </div>
           </section>
 
-          {/* Create & Join */}
           <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <div className="flex flex-col gap-5 rounded-2xl border border-[#ffffff27] bg-[#12101c] p-6 transition-all duration-300 hover:shadow-[0_0_2rem_#4a388533]">
+            <div className="flex flex-col gap-5 rounded-2xl border border-[#ffffff27] bg-[#12101c] p-6 text-white transition-all duration-300 hover:shadow-[0_0_2rem_#4a388533]">
               <div className="flex items-center gap-3">
                 <span className="rounded-lg bg-[#5d5ff2] p-2.5 text-white">
                   <LuPlus className="h-5 w-5" />
@@ -189,14 +201,17 @@ function ClientDashboard() {
                   <h2 className="text-lg font-semibold text-white">
                     Create Room
                   </h2>
-                  <p className="text-sm font-light opacity-60">
+                  <p className="text-sm font-light text-white/50">
                     Start a fresh canvas and invite others
                   </p>
                 </div>
               </div>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="name" className="text-sm text-white/70">
+                  <label
+                    htmlFor="name"
+                    className="text-sm font-medium text-white/70"
+                  >
                     Room name
                   </label>
                   <input
@@ -209,7 +224,10 @@ function ClientDashboard() {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="roomId" className="text-sm text-white/70">
+                  <label
+                    htmlFor="roomId"
+                    className="text-sm font-medium text-white/70"
+                  >
                     Room ID
                   </label>
                   <div className="flex gap-2">
@@ -219,7 +237,7 @@ function ClientDashboard() {
                       value={room.roomId}
                       onChange={updateRoom}
                       placeholder="room-abc123"
-                      className="min-w-0 flex-1 rounded-xl border border-[#ffffff20] bg-[#0b0914] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#6b4def]"
+                      className="min-w-0 flex-1 rounded-xl border border-[#ffffff20] bg-[#0b0914] px-4 py-3 font-mono text-sm text-white outline-none transition-colors placeholder:font-sans placeholder:text-white/30 focus:border-[#6b4def]"
                     />
                     <button
                       type="button"
@@ -239,9 +257,9 @@ function ClientDashboard() {
                   text={creating ? "Creating..." : "Create & Open"}
                   icon={
                     creating ? (
-                      <LuLoader className="ml-2 h-4 w-4 animate-spin" />
+                      <Spinner size="sm" className="ml-2" />
                     ) : (
-                      <GoArrowRight className="ml-2 text-lg" />
+                      <GoArrowRight className="ml-2 text-lg text-white" />
                     )
                   }
                   backgroundColor="bg-[#6b4def]"
@@ -251,13 +269,13 @@ function ClientDashboard() {
                   Vpad="py-3"
                   Hpad="px-6"
                   radius="rounded-xl"
-                  className="w-full hover:bg-[#6147d6] transition-all disabled:opacity-60"
+                  className="w-full transition-all hover:bg-[#6147d6] disabled:opacity-60"
                   onClick={createNewRoom}
                 />
               </div>
             </div>
 
-            <div className="flex flex-col gap-5 rounded-2xl border border-[#ffffff27] bg-[#12101c] p-6 transition-all duration-300 hover:shadow-[0_0_2rem_#4a388533]">
+            <div className="flex flex-col gap-5 rounded-2xl border border-[#ffffff27] bg-[#12101c] p-6 text-white transition-all duration-300 hover:shadow-[0_0_2rem_#4a388533]">
               <div className="flex items-center gap-3">
                 <span className="rounded-lg bg-[#6b4def] p-2.5 text-white">
                   <LuLogIn className="h-5 w-5" />
@@ -266,14 +284,17 @@ function ClientDashboard() {
                   <h2 className="text-lg font-semibold text-white">
                     Join Room
                   </h2>
-                  <p className="text-sm font-light opacity-60">
+                  <p className="text-sm font-light text-white/50">
                     Enter a room ID shared by someone else
                   </p>
                 </div>
               </div>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="joinRoomId" className="text-sm text-white/70">
+                  <label
+                    htmlFor="joinRoomId"
+                    className="text-sm font-medium text-white/70"
+                  >
                     Room ID
                   </label>
                   <input
@@ -282,16 +303,16 @@ function ClientDashboard() {
                     onChange={(e) => setJoinRoomId(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && joinRoom()}
                     placeholder="Paste room ID here"
-                    className="rounded-xl border border-[#ffffff20] bg-[#0b0914] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#6b4def]"
+                    className="rounded-xl border border-[#ffffff20] bg-[#0b0914] px-4 py-3 font-mono text-sm text-white outline-none transition-colors placeholder:font-sans placeholder:text-white/30 focus:border-[#6b4def]"
                   />
                 </div>
                 <Button
                   text={joining ? "Joining..." : "Join Room"}
                   icon={
                     joining ? (
-                      <LuLoader className="ml-2 h-4 w-4 animate-spin" />
+                      <Spinner size="sm" className="ml-2" />
                     ) : (
-                      <FiArrowRight className="ml-2 text-base" />
+                      <FiArrowRight className="ml-2 text-base text-white" />
                     )
                   }
                   backgroundColor="bg-[#090812]"
@@ -310,22 +331,21 @@ function ClientDashboard() {
             </div>
           </section>
 
-          {/* Rooms list */}
           <section className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-white">Your Rooms</h2>
-                <p className="text-sm font-light opacity-50">
-                  {rooms.length} room{rooms.length !== 1 ? "s" : ""} in your
-                  workspace
-                </p>
-              </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Your Rooms</h2>
+              <p className="text-sm font-light text-white/50">
+                {rooms.length} room{rooms.length !== 1 ? "s" : ""} in your
+                workspace
+              </p>
             </div>
 
             {loadingRooms ? (
               <div className="flex items-center justify-center gap-3 rounded-2xl border border-[#ffffff15] py-20 text-white/50">
-                <LuLoader className="h-5 w-5 animate-spin" />
-                <span className="text-sm">Loading your rooms...</span>
+                <Spinner />
+                <span className="text-sm text-white/50">
+                  Loading your rooms...
+                </span>
               </div>
             ) : rooms.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-[#ffffff20] bg-[#12101c]/50 py-20 text-center">
@@ -334,7 +354,7 @@ function ClientDashboard() {
                 </span>
                 <div className="flex flex-col gap-1">
                   <p className="text-lg font-medium text-white">No rooms yet</p>
-                  <p className="max-w-sm text-sm font-light opacity-50">
+                  <p className="max-w-sm text-sm font-light text-white/50">
                     Create your first room above to start drawing and
                     collaborating with others.
                   </p>
@@ -345,19 +365,19 @@ function ClientDashboard() {
                 {rooms.map((r) => (
                   <article
                     key={r.roomId}
-                    className="group flex flex-col gap-4 rounded-2xl border border-[#ffffff27] bg-[#12101c] p-5 transition-all duration-300 hover:border-[#6b4def55] hover:shadow-[0_0_1.5rem_#4a388544]"
+                    className="group flex flex-col gap-4 rounded-2xl border border-[#ffffff27] bg-[#12101c] p-5 text-white transition-all duration-300 hover:border-[#6b4def55] hover:shadow-[0_0_1.5rem_#4a388544]"
                   >
                     <div className="flex flex-col gap-1">
                       <h3 className="truncate text-lg font-semibold text-white">
                         {r.name}
                       </h3>
-                      <p className="text-xs font-light opacity-40">
+                      <p className="text-xs font-light text-white/40">
                         Created {formatDate(r.createdAt)}
                       </p>
                     </div>
 
                     <div className="flex items-center gap-2 rounded-lg border border-[#ffffff15] bg-[#0b0914] px-3 py-2">
-                      <code className="min-w-0 flex-1 truncate text-xs text-[#5d5ff2]">
+                      <code className="min-w-0 flex-1 truncate font-mono text-xs text-[#8b8dff]">
                         {r.roomId}
                       </code>
                       <button
@@ -370,34 +390,60 @@ function ClientDashboard() {
                       </button>
                     </div>
 
-                    <div className="mt-auto flex gap-2">
-                      <Button
-                        text="Open"
-                        icon={<GoArrowRight className="ml-1.5 text-base" />}
-                        backgroundColor="bg-[#6b4def]"
-                        fontWeignt="font-medium"
-                        textSize="text-xs"
-                        textColor="text-white"
-                        Vpad="py-2"
-                        Hpad="px-4"
-                        radius="rounded-lg"
-                        className="flex-1 hover:bg-[#6147d6] transition-all"
-                        onClick={() => joinRoom(r.roomId)}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => deleteRoom(r.roomId)}
-                        disabled={deletingId === r.roomId}
-                        title="Delete room"
-                        className="flex items-center justify-center rounded-lg border border-[#ffffff20] px-3 py-2 text-red-400/70 transition-all hover:border-red-400/40 hover:bg-red-400/10 hover:text-red-400 disabled:opacity-50"
-                      >
-                        {deletingId === r.roomId ? (
-                          <LuLoader className="h-4 w-4 animate-spin" />
-                        ) : (
+                    {confirmDeleteId === r.roomId ? (
+                      <div className="mt-auto flex flex-col gap-2">
+                        <p className="text-xs font-light text-white/50">
+                          Delete this room permanently?
+                        </p>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => deleteRoom(r.roomId)}
+                            disabled={deletingId === r.roomId}
+                            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-500/20 px-3 py-2 text-xs font-medium text-red-400 transition-all hover:bg-red-500/30 disabled:opacity-50"
+                          >
+                            {deletingId === r.roomId ? (
+                              <Spinner size="sm" />
+                            ) : (
+                              "Confirm"
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setConfirmDeleteId(null)}
+                            className="flex-1 rounded-lg border border-[#ffffff20] px-3 py-2 text-xs font-medium text-white/70 transition-all hover:border-[#ffffff40] hover:text-white"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mt-auto flex gap-2">
+                        <Button
+                          text="Open"
+                          icon={
+                            <GoArrowRight className="ml-1.5 text-base text-white" />
+                          }
+                          backgroundColor="bg-[#6b4def]"
+                          fontWeignt="font-medium"
+                          textSize="text-xs"
+                          textColor="text-white"
+                          Vpad="py-2"
+                          Hpad="px-4"
+                          radius="rounded-lg"
+                          className="flex-1 transition-all hover:bg-[#6147d6]"
+                          onClick={() => joinRoom(r.roomId)}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setConfirmDeleteId(r.roomId)}
+                          title="Delete room"
+                          className="flex items-center justify-center rounded-lg border border-[#ffffff20] px-3 py-2 text-red-400/70 transition-all hover:border-red-400/40 hover:bg-red-400/10 hover:text-red-400"
+                        >
                           <LuTrash2 className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
+                        </button>
+                      </div>
+                    )}
                   </article>
                 ))}
               </div>

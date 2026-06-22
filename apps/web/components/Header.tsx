@@ -1,29 +1,36 @@
 "use client";
 import Button from "@repo/ui/Button";
+import Spinner from "@repo/ui/Spinner";
+import { useToast } from "@repo/ui/ToastProvider";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header({ session }: { session: Session | null }) {
   const [logout, isLogout] = useState<boolean>(false);
+  const router = useRouter();
+  const toast = useToast();
 
   async function signoutUser() {
     const token = session?.user.accessToken;
-    if (!token) return alert("Access Token not found!");
+    if (!token) return toast.error("Access token not found");
 
     isLogout(true);
     try {
-      await axios.get("/api/user/signout", {
+      await axios.get("/api/user/auth/signout", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      signOut();
+      signOut({ redirect: false });
+      toast.success("Signed out successfully");
+      router.push("/");
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        alert(err.response?.data?.message ?? err.message);
+        toast.error(err.response?.data?.message ?? err.message);
       } else {
-        alert((err as Error).message);
+        toast.error((err as Error).message);
       }
     }
     isLogout(false);
@@ -59,6 +66,7 @@ export default function Header({ session }: { session: Session | null }) {
       {session?.user ? (
         <Button
           text={logout ? "Signing Out..." : "Sign Out"}
+          icon={logout ? <Spinner size="sm" className="ml-2" /> : undefined}
           textSize="text-sm"
           textColor="text-[#6b4def]"
           fontWeignt="font-semibold"

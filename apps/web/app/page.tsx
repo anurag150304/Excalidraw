@@ -17,6 +17,7 @@ import {
 } from "react-icons/lu";
 import { FaRegCircle, FaRegSquare } from "react-icons/fa";
 import Addvertise from "../components/Add.block";
+import Footer from "../components/Footer";
 import { FiArrowRight } from "react-icons/fi";
 import { Fragment } from "react";
 
@@ -185,49 +186,57 @@ export default async function Page() {
             ))}
           </div>
         </section>
-        <section>
-          <div className="text-white">
-            <div>
-              <h1>Ready to Start</h1>
-              <h1>Ceating?</h1>
-            </div>
-            <span>
-              Join thousands of creators and start drawing today. No credit card
-              required.
-            </span>
-            <div>
-              <Link href="/signup">
-                <Button
-                  text="Get Started Free &nbsp;&nbsp;&nbsp;"
-                  icon={<FiArrowRight />}
-                  textSize="text-sm"
-                  textColor="text-[#fff]"
-                  fontWeignt="font-semibold"
-                  backgroundColor="bg-[#6b4def]"
-                  borderLine="border-2"
-                  borderColor="border-[#6b4def]"
-                  Vpad="py-1.5"
-                  Hpad="px-6"
-                  radius="rounded-lg"
-                  className="hover:bg-[#6147d6] hover:text-white transition-all"
-                />
-                <Button
-                  text="Contact Sales"
-                  textSize="text-sm"
-                  textColor="text-[#fff]"
-                  fontWeignt="font-semibold"
-                  backgroundColor="bg-[#6b4def]"
-                  borderLine="border-2"
-                  borderColor="border-[#6b4def]"
-                  Vpad="py-1.5"
-                  Hpad="px-6"
-                  radius="rounded-lg"
-                />
-              </Link>
-            </div>
+        <section className="w-full max-w-5xl rounded-3xl border border-[#ffffff20] bg-[#12101c] p-10 md:p-14 text-white text-center flex flex-col items-center gap-8"
+          style={{ boxShadow: "0px 0px 2.5rem #4a388544" }}
+        >
+          <div className="flex flex-col items-center gap-3">
+            <h2 className="text-4xl font-bold md:text-5xl">
+              Ready to Start
+            </h2>
+            <h2 className="text-4xl font-bold text-[#5d5ff2] md:text-5xl">
+              Creating?
+            </h2>
+          </div>
+          <p className="max-w-lg text-base font-light leading-relaxed text-white/50 md:text-lg">
+            Join thousands of creators and start drawing today. No credit card
+            required.
+          </p>
+          <div className="flex flex-col items-center gap-4 sm:flex-row">
+            <Link href="/signup">
+              <Button
+                text="Get Started Free"
+                icon={<FiArrowRight className="ml-2 text-base" />}
+                textSize="text-sm"
+                textColor="text-white"
+                fontWeignt="font-semibold"
+                backgroundColor="bg-[#6b4def]"
+                borderLine="border-2"
+                borderColor="border-[#6b4def]"
+                Vpad="py-3"
+                Hpad="px-8"
+                radius="rounded-xl"
+                className="hover:bg-[#6147d6] transition-all"
+              />
+            </Link>
+            <Link href="/dashboard">
+              <Button
+                text="Open Dashboard"
+                textSize="text-sm"
+                textColor="text-white"
+                fontWeignt="font-semibold"
+                backgroundColor="bg-[#090812]"
+                borderLine="border-2"
+                borderColor="border-[#ffffff25]"
+                Vpad="py-3"
+                Hpad="px-8"
+                radius="rounded-xl"
+                className="transition-all hover:border-[#6b4def]"
+              />
+            </Link>
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

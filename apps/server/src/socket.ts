@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config({ path: "../../.env" });
 
-import { Server, Socket } from "socket.io";
+import { DefaultEventsMap, Server, Socket } from "socket.io";
 import { prisma as DB } from "@repo/db-config/DB";
 import { validateToken } from "@repo/utils/jwt";
-import redisClient from "@repo/redis/redisClient";
+import { redisClient } from "@repo/redis/redisClient";
 
 interface UserSocket extends Socket {
   userId: string;
@@ -13,7 +13,9 @@ interface UserSocket extends Socket {
 }
 
 const rooms = new Map<string, UserSocket[]>(); // {roomId: [socket1, socket2, ...]}
-const io = new Server({
+const globalIO = global as unknown as { io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> };
+
+export const io = globalIO.io || new Server({
   cors: {
     origin: ["http://localhost:3001"],
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -135,4 +137,5 @@ io.on("connection", (socket) => {
 });
 
 redisClient.on("connect", () => console.log("Connected to redis DB"));
-io.listen(+process.env.PORT!);
+io.listen(Number(process.env.PORT) || 3000);
+if (process.env.NODE_ENV !== "production") globalIO.io = io;

@@ -13,6 +13,7 @@ import {
   socket,
 } from "../../../config/socket.config";
 import TopPanel from "../../../components/Top.pannel";
+import { useToast } from "@repo/ui/ToastProvider";
 
 export default function CanvasPage() {
   return (
@@ -32,6 +33,7 @@ function Canvas() {
   const params = useSearchParams();
   const session = useSession();
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     if (
@@ -43,8 +45,9 @@ function Canvas() {
 
     const roomId = params.get("roomId");
     if (!roomId) {
-      alert("Room ID is required");
-      return router.push("/dashboard");
+      toast.error("Room ID is required");
+      router.push("/dashboard");
+      return;
     }
 
     mainCanvas.current.classList.remove("opacity-0");
@@ -65,44 +68,47 @@ function Canvas() {
     receiveMessage("recieve_message", handleReceiveMessage);
     receiveMessage("socket_error", handleSocketError);
 
+
+    function handleReceiveMessage(data: { sender: string; slug: Shapes }) {
+      shapes.current.push(data.slug);
+      if (mainCanvas.current) {
+        const ctx = mainCanvas.current.getContext("2d");
+        if (ctx) {
+          addExistingShapes(mainCanvas.current, ctx, shapes.current);
+        }
+      }
+    };
+
+    function handleSocketError(err: { error: string }) {
+      toast.error(err.error);
+    }
+
+    async function fetchAllCanvas(roomId: string) {
+      axios
+        .get("/api/canvas/all", { params: { roomId } })
+        .then((res) => {
+          if (!res.data.canvas || !res.data.canvas.length) return;
+
+          res.data.canvas.map((val: { slug: string }) => {
+            shapes.current.push(JSON.parse(val.slug));
+          });
+          addExistingShapes(
+            mainCanvas.current!,
+            mainCanvas.current!.getContext("2d")!,
+            shapes.current,
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(err.response?.data?.error ?? "Failed to load canvas");
+        });
+    }
+
     return () => {
       socket?.off("recieve_message", handleReceiveMessage);
       socket?.off("socket_error", handleSocketError);
     };
-  }, [session.status, session.data?.user.accessToken, params, router]);
-
-  const handleReceiveMessage = (data: { sender: string; slug: Shapes }) => {
-    shapes.current.push(data.slug);
-    if (mainCanvas.current) {
-      const ctx = mainCanvas.current.getContext("2d");
-      if (ctx) {
-        addExistingShapes(mainCanvas.current, ctx, shapes.current);
-      }
-    }
-  };
-
-  const handleSocketError = (err: { error: string }) => alert(err.error);
-
-  async function fetchAllCanvas(roomId: string) {
-    axios
-      .get("/api/canvas/all", { params: { roomId } })
-      .then((res) => {
-        if (!res.data.canvas || !res.data.canvas.length) return;
-
-        res.data.canvas.map((val: { slug: string }) => {
-          shapes.current.push(JSON.parse(val.slug));
-        });
-        addExistingShapes(
-          mainCanvas.current!,
-          mainCanvas.current!.getContext("2d")!,
-          shapes.current,
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(err.response?.data?.error ?? "An error occurred");
-      });
-  }
+  }, [params, router, session.data, session.status, toast]);
 
   return (
     <main className="relative h-screen w-screen overflow-hidden">
