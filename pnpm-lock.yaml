@@ -23,6 +23,9 @@ importers:
       turbo:
         specifier: ^2.9.18
         version: 2.9.18
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
 
   apps/server:
     dependencies:
@@ -144,7 +147,7 @@ importers:
         version: 7.8.0
       '@prisma/client':
         specifier: ^7.8.0
-        version: 7.8.0(prisma@7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.2))(typescript@5.8.2)
+        version: 7.8.0(prisma@7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@6.0.3))(typescript@6.0.3)
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -163,7 +166,7 @@ importers:
         version: 8.20.0
       prisma:
         specifier: ^7.8.0
-        version: 7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.2)
+        version: 7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@6.0.3)
 
   packages/eslint-config:
     devDependencies:
@@ -2691,6 +2694,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
     engines: {node: '>= 0.4'}
@@ -3102,12 +3110,12 @@ snapshots:
 
   '@prisma/client-runtime-utils@7.8.0': {}
 
-  '@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.2))(typescript@5.8.2)':
+  '@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
       '@prisma/client-runtime-utils': 7.8.0
     optionalDependencies:
-      prisma: 7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.2)
-      typescript: 5.8.2
+      prisma: 7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@6.0.3)
+      typescript: 6.0.3
 
   '@prisma/config@7.8.0':
     dependencies:
@@ -3122,7 +3130,7 @@ snapshots:
 
   '@prisma/debug@7.8.0': {}
 
-  '@prisma/dev@0.24.3(typescript@5.8.2)':
+  '@prisma/dev@0.24.3(typescript@6.0.3)':
     dependencies:
       '@electric-sql/pglite': 0.4.1
       '@electric-sql/pglite-socket': 0.1.1(@electric-sql/pglite@0.4.1)
@@ -3139,7 +3147,7 @@ snapshots:
       proper-lockfile: 4.1.2
       remeda: 2.33.4
       std-env: 3.10.0
-      valibot: 1.2.0(typescript@5.8.2)
+      valibot: 1.2.0(typescript@6.0.3)
       zeptomatch: 2.1.0
     transitivePeerDependencies:
       - typescript
@@ -4819,16 +4827,16 @@ snapshots:
 
   pretty-format@3.8.0: {}
 
-  prisma@7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.2):
+  prisma@7.8.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@6.0.3):
     dependencies:
       '@prisma/config': 7.8.0
-      '@prisma/dev': 0.24.3(typescript@5.8.2)
+      '@prisma/dev': 0.24.3(typescript@6.0.3)
       '@prisma/engines': 7.8.0
       '@prisma/studio-core': 0.27.3(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       mysql2: 3.15.3
       postgres: 3.4.7
     optionalDependencies:
-      typescript: 5.8.2
+      typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -5231,6 +5239,8 @@ snapshots:
 
   typescript@5.8.2: {}
 
+  typescript@6.0.3: {}
+
   unbox-primitive@1.1.0:
     dependencies:
       call-bound: 1.0.4
@@ -5254,9 +5264,9 @@ snapshots:
 
   uuid@8.3.2: {}
 
-  valibot@1.2.0(typescript@5.8.2):
+  valibot@1.2.0(typescript@6.0.3):
     optionalDependencies:
-      typescript: 5.8.2
+      typescript: 6.0.3
 
   vary@1.1.2: {}
 
