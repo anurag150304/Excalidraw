@@ -7,7 +7,7 @@
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prepare": "husky",
+    "prepare": "is-ci || husky",
     "test": "pnpm run lint && pnpm run check-types && pnpm run format"
   },
   "devDependencies": {
