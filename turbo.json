@@ -29,6 +29,7 @@
       ]
     },
     "lint": {
+      "cache": false,
       "dependsOn": [
         "^lint"
       ]
