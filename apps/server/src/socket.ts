@@ -21,7 +21,7 @@ export const io =
   globalIO.io ||
   new Server({
     cors: {
-      origin: ["http://localhost:3001"],
+      origin: [process.env.NEXTAUTH_URL!],
       methods: ["GET", "POST", "PUT", "DELETE"],
     },
     pingTimeout: 60_000,

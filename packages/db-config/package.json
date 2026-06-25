@@ -2,7 +2,7 @@
   "name": "@repo/db-config",
   "version": "1.0.0",
   "description": "",
-  "main": "db.config.ts",
+  "main": "prisma.ts",
   "type": "module",
   "scripts": {
     "dev": "tsc -b",
