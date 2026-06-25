@@ -2,15 +2,15 @@
   "name": "excalidraw-monorepo",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "build": "turbo run build",
+    "prepare": "is-ci || husky",
+    "postinstall": "pnpm db:generate",
     "check-types": "turbo run check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prepare": "is-ci || husky",
-    "test": "pnpm run lint && pnpm run check-types && pnpm run format",
-    "db:deploy": "cd packages/db-config && pnpm prisma migrate deploy && cd ../..",
-    "db:generate": "cd packages/db-config && pnpm prisma generate && cd ../.."
+    "test": "pnpm lint && pnpm check-types && pnpm format",
+    "db:generate": "pnpm dlx prisma generate --schema packages/db-config/prisma/schema.prisma"
   },
   "devDependencies": {
     "husky": "^9.1.7",
