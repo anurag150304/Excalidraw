@@ -8,7 +8,9 @@
     "check-types": "turbo run check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "is-ci || husky",
-    "test": "pnpm run lint && pnpm run check-types && pnpm run format"
+    "test": "pnpm run lint && pnpm run check-types && pnpm run format",
+    "db:deploy": "cd packages/db-config && prisma migrate deploy && cd ../..",
+    "db:generate": "cd packages/db-config && prisma generate && cd ../.."
   },
   "devDependencies": {
     "husky": "^9.1.7",
