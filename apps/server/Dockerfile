@@ -33,7 +33,7 @@ RUN pnpm install --frozen-lockfile
 # ----------------------------
 COPY --from=pruner /app/out/full/ .
 
-RUN pnpm exec prisma generate --schema packages/db-config/prisma/schema.prisma
+RUN pnpm dlx prisma generate --schema packages/db-config/prisma/schema.prisma
 
 RUN pnpm turbo build --filter=server
 
