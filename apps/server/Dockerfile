@@ -49,6 +49,6 @@ WORKDIR /app
 
 COPY --from=installer /app .
 
-EXPOSE 3001
+EXPOSE 3000
 
 CMD ["pnpm","--filter=server","start"]
