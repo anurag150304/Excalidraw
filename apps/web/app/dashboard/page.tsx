@@ -131,7 +131,6 @@ function ClientDashboard() {
     }
   }
 
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function deleteRoom(roomId: string) {
     setDeletingId(roomId);
@@ -398,7 +397,11 @@ function ClientDashboard() {
                             type="button"
                             // onClick={() => deleteRoom(r.roomId)}
                             // disabled={deletingId === r.roomId}
-                            onClick={() => toast.error("Delete functionality is disabled for now.")}
+                            onClick={() =>
+                              toast.error(
+                                "Delete functionality is disabled for now.",
+                              )
+                            }
                             className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-500/20 px-3 py-2 text-xs font-medium text-red-400 transition-all hover:bg-red-500/30 disabled:opacity-50"
                           >
                             {deletingId === r.roomId ? (
