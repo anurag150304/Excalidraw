@@ -6,7 +6,7 @@ export default withAuth(
     return NextResponse.next();
   },
   {
-    callbacks: { authorized: ({ token }) => !!token }
+    callbacks: { authorized: ({ token }) => !!token },
   },
 );
 
