@@ -54,7 +54,7 @@ function ClientDashboard() {
   const toast = useToast();
 
   useEffect(() => {
-    if (!session.data?.user?.id) return;
+    if (!session.data?.user.id) return;
     (async () => {
       setLoadingRooms(true);
       try {
@@ -70,7 +70,7 @@ function ClientDashboard() {
         setLoadingRooms(false);
       }
     })();
-  }, [session.data?.user?.id, toast]);
+  }, [session.data?.user.id, toast]);
 
   function updateRoom(e: ChangeEvent<HTMLInputElement>) {
     setRoom({ ...room, [e.target.name]: e.target.value });
