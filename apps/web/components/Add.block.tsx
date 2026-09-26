@@ -1,4 +1,4 @@
-import { AddsType } from "@repo/types/commonTypes";
+import { AddsType } from "@repo/types";
 export default function Addvertise({ icon, heading, text }: AddsType) {
   return (
     <div

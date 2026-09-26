@@ -1,7 +1,7 @@
-import { errHandler } from "@repo/utils/errHandler";
+import { errHandler } from "@repo/utils";
 import { NextRequest, NextResponse } from "next/server";
-import { roomSchema } from "@repo/zod-validations/room.validation";
-import { prisma as DB } from "@repo/db-config/DB";
+import { roomSchema } from "@repo/zod-validations";
+import { prisma as DB } from "@repo/db-config";
 
 export async function POST(req: NextRequest) {
   try {

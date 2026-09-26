@@ -2,17 +2,21 @@
   "name": "@repo/db-config",
   "version": "1.0.0",
   "description": "",
-  "main": "prisma.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsc -b",
-    "build": "tsc -b"
+    "dev": "tsc",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "exports": {
-    "./DB": "./prisma.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

@@ -5,13 +5,13 @@ import CanavasBtn from "./Canvas.btn";
 import { GiCircle, GiPlainSquare, GiSquare } from "react-icons/gi";
 import { GiPlainCircle } from "react-icons/gi";
 import { memo, useRef, useState } from "react";
-import { ToolsType, Shapes } from "@repo/types/commonTypes";
+import { ToolsType, Shapes } from "@repo/types";
 import { HiArrowLongRight } from "react-icons/hi2";
 import { PiPencilSimpleLight } from "react-icons/pi";
 import { PiPencilSimpleFill } from "react-icons/pi";
 import { CiEraser } from "react-icons/ci";
-import { draw } from "../canvas/draw";
-import { sendMessage } from "../config/socket.config";
+import { draw } from "@/canvas/draw";
+import { sendMessage } from "@/config/socket.config";
 import { FaEraser } from "react-icons/fa";
 
 function TopPanel({
@@ -33,7 +33,7 @@ function TopPanel({
     pencil: false,
     eraser: false,
   });
-  const cleanupRef = useRef<() => void>(() => {});
+  const cleanupRef = useRef<() => void>(() => { });
 
   function executeDrawTool(
     type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser",

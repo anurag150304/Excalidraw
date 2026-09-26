@@ -1,7 +1,7 @@
-import { errHandler } from "@repo/utils/errHandler";
+import { errHandler } from "@repo/utils";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma as DB } from "@repo/db-config/DB";
-import { Shapes } from "@repo/types/commonTypes";
+import { prisma as DB } from "@repo/db-config";
+import { Shapes } from "@repo/types";
 
 export async function POST(req: NextRequest) {
   try {

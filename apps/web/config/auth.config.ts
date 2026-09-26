@@ -1,6 +1,6 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { prisma as DB } from "@repo/db-config/DB";
-import { generateToken } from "@repo/utils/jwt";
+import { prisma as DB } from "@repo/db-config";
+import { generateToken } from "@repo/utils";
 import { AuthOptions } from "next-auth";
 import bcrypt from "bcrypt";
 

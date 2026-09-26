@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import Header from "../../components/Header";
+import Header from "@/components/Header";
 import Button from "@repo/ui/Button";
 import Spinner from "@repo/ui/Spinner";
 import { useToast } from "@repo/ui/ToastProvider";

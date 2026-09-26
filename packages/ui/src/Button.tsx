@@ -1,5 +1,5 @@
 "use client";
-import { ButtonType } from "@repo/types/commonTypes";
+import { ButtonType } from "@repo/types";
 
 export default function Button(props: Partial<ButtonType>) {
   return (

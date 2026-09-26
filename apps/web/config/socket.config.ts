@@ -1,4 +1,4 @@
-import { DataType, Shapes } from "@repo/types/commonTypes";
+import { DataType, Shapes } from "@repo/types";
 import { io, Socket } from "socket.io-client";
 
 export let socket: Socket | null = null;

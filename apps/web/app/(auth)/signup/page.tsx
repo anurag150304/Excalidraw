@@ -7,7 +7,7 @@ import Button from "@repo/ui/Button";
 import Spinner from "@repo/ui/Spinner";
 import { useToast } from "@repo/ui/ToastProvider";
 import { ChangeEvent, useState } from "react";
-import { User } from "@repo/types/zodTypeInfers";
+import { User } from "@repo/types";
 import { LuSparkles } from "react-icons/lu";
 
 export default function Signup() {

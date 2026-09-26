@@ -1,8 +1,8 @@
 import { GoArrowRight, GoVideo } from "react-icons/go";
-import { authOptions } from "../config/auth.config";
-import { AddsType } from "@repo/types/commonTypes";
+import { authOptions } from "@/config/auth.config";
+import { AddsType } from "@repo/types";
 import { getServerSession } from "next-auth";
-import Header from "../components/Header";
+import Header from "@/components/Header";
 import Button from "@repo/ui/Button";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,8 +16,8 @@ import {
   LuZoomIn,
 } from "react-icons/lu";
 import { FaRegCircle, FaRegSquare } from "react-icons/fa";
-import Addvertise from "../components/Add.block";
-import Footer from "../components/Footer";
+import Addvertise from "@/components/Add.block";
+import Footer from "@/components/Footer";
 import { FiArrowRight } from "react-icons/fi";
 import { Fragment } from "react";
 

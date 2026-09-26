@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { errHandler } from "@repo/utils/errHandler";
-import { prisma as DB } from "@repo/db-config/DB";
+import { errHandler } from "@repo/utils";
+import { prisma as DB } from "@repo/db-config";
 
 export async function GET(req: NextRequest) {
   try {

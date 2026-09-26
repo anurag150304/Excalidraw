@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { redisClient } from "@repo/redis/redisClient";
-import { errHandler } from "@repo/utils/errHandler";
+import { redisClient } from "@repo/redis";
+import { errHandler } from "@repo/utils";
 
 export async function GET(req: NextRequest) {
   try {

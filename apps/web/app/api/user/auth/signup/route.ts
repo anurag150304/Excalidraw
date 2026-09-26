@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { userSchema } from "@repo/zod-validations/user.validation";
-import { prisma as DB } from "@repo/db-config/DB";
-import { errHandler } from "@repo/utils/errHandler";
+import { userSchema } from "@repo/zod-validations";
+import { prisma as DB } from "@repo/db-config";
+import { errHandler } from "@repo/utils";
 import bcrypt from "bcrypt";
 
 export async function POST(req: NextRequest) {

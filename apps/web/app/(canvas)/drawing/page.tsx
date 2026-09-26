@@ -3,16 +3,16 @@
 import axios from "axios";
 import { SessionProvider, useSession } from "next-auth/react";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { addExistingShapes } from "../../../canvas/draw";
-import { Shapes } from "@repo/types/commonTypes";
+import { addExistingShapes } from "@/canvas/draw";
+import { Shapes } from "@repo/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   InitializeSocket,
   receiveMessage,
   sendMessage,
   socket,
-} from "../../../config/socket.config";
-import TopPanel from "../../../components/Top.pannel";
+} from "@/config/socket.config";
+import TopPanel from "@/components/Top.pannel";
 import { useToast } from "@repo/ui/ToastProvider";
 
 export default function CanvasPage() {

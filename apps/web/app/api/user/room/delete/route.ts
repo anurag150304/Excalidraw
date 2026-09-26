@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma as DB } from "@repo/db-config/DB";
-import { errHandler } from "@repo/utils/errHandler";
+import { prisma as DB } from "@repo/db-config";
+import { errHandler } from "@repo/utils";
 
 export async function DELETE(req: NextRequest) {
   try {

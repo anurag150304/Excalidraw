@@ -1,4 +1,4 @@
-import { Coords } from "@repo/types/commonTypes";
+import { Coords } from "@repo/types";
 
 export function drawCircle(
   ctx: CanvasRenderingContext2D,

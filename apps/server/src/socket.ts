@@ -2,9 +2,9 @@ import dotenv from "dotenv";
 dotenv.config({ path: "../../.env" });
 
 import { DefaultEventsMap, Server, Socket } from "socket.io";
-import { prisma as DB } from "@repo/db-config/DB";
-import { validateToken } from "@repo/utils/jwt";
-import { redisClient } from "@repo/redis/redisClient";
+import { prisma as DB } from "@repo/db-config";
+import { validateToken } from "@repo/utils";
+import { redisClient } from "@repo/redis";
 
 interface UserSocket extends Socket {
   userId: string;

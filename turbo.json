@@ -1,7 +1,6 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "globalEnv": [
-    "PORT",
     "SOCKET_URL",
     "REDIS_HOST",
     "REDIS_PORT",
@@ -18,14 +17,12 @@
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
-        ".env",
-        "packages/db-config/prisma/schema.prisma"
+        ".env"
       ],
       "outputs": [
         "dist/**",
         ".next/**",
-        "!.next/cache/**",
-        "packages/db-config/prisma/migrations/**"
+        "!.next/cache/**"
       ]
     },
     "lint": {

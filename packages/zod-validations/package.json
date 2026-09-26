@@ -2,11 +2,12 @@
   "name": "@repo/zod-validations",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsc -b",
-    "build": "tsc -b"
+    "dev": "tsc",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,9 @@
     "zod": "^4.0.5"
   },
   "exports": {
-    "./*": "./dist/*.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   }
 }
