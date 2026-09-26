@@ -13,7 +13,7 @@ import {
   socket,
 } from "@/config/socket.config";
 import TopPanel from "@/components/Top.pannel";
-import { useToast } from "@repo/ui/ToastProvider";
+import { useToast } from "@/components/ToastProvider";
 
 export default function CanvasPage() {
   return (

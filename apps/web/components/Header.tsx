@@ -1,7 +1,7 @@
 "use client";
-import Button from "@repo/ui/Button";
-import Spinner from "@repo/ui/Spinner";
-import { useToast } from "@repo/ui/ToastProvider";
+import Button from "@/components/Button";
+import Spinner from "@/components/Spinner";
+import { useToast } from "@/components/ToastProvider";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { signOut } from "next-auth/react";

@@ -78,11 +78,10 @@ function ToastContainer({
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`toast-enter pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-md ${
-            toast.type === "success"
+          className={`toast-enter pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-md ${toast.type === "success"
               ? "border-emerald-500/30 bg-[#12101c]/95"
               : "border-red-500/30 bg-[#12101c]/95"
-          }`}
+            }`}
         >
           <ToastIcon type={toast.type} />
           <p className="flex-1 text-sm font-medium leading-snug text-white">

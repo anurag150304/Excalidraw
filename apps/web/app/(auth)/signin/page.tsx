@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Button from "@repo/ui/Button";
-import Spinner from "@repo/ui/Spinner";
-import { useToast } from "@repo/ui/ToastProvider";
+import Button from "@/components/Button";
+import Spinner from "@/components/Spinner";
+import { useToast } from "@/components/ToastProvider";
 import { ChangeEvent, useState } from "react";
 import { User } from "@repo/types";
 import { signIn } from "next-auth/react";
