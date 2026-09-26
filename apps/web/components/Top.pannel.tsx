@@ -33,7 +33,7 @@ function TopPanel({
     pencil: false,
     eraser: false,
   });
-  const cleanupRef = useRef<() => void>(() => { });
+  const cleanupRef = useRef<() => void>(() => {});
 
   function executeDrawTool(
     type: "rect" | "circ" | "line" | "pencil" | "lock" | "eraser",

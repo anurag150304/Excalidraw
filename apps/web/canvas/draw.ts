@@ -23,7 +23,7 @@ export function draw({
 }: DrawParamTypes) {
   const ctx1 = mainCanvas.getContext("2d");
   const ctx2 = drawCanvas.getContext("2d");
-  if (!ctx1 || !ctx2) return () => { };
+  if (!ctx1 || !ctx2) return () => {};
 
   const coords: Coords = {
     initial: { x: 0, y: 0 },
